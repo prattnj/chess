@@ -1,7 +1,6 @@
 package dao.ram;
 
 import dao.AuthTokenDAO;
-import dataAccess.DataAccessException;
 import model.bean.AuthTokenBean;
 
 import java.util.HashMap;
@@ -29,7 +28,7 @@ public class RAMAuthTokenDAO implements AuthTokenDAO {
     }
 
     @Override
-    public AuthTokenBean find(String authToken) throws DataAccessException {
+    public AuthTokenBean find(String authToken) {
         return table.get(authToken);
     }
 

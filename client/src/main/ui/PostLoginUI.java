@@ -7,6 +7,7 @@ import model.response.BaseResponse;
 import model.response.CreateGameResponse;
 import model.response.ListGamesObj;
 import model.response.ListGamesResponse;
+import util.Esc;
 import util.Factory;
 
 import java.util.Arrays;
@@ -200,7 +201,5 @@ public class PostLoginUI extends PreLoginUI {
             case 'p' -> Esc.BLACK_PAWN;
             default -> Esc.EMPTY;
         };
-        /*if (Character.isAlphabetic(c)) return " " + c + " ";
-        else return Esc.EMPTY;*/
     }
 }

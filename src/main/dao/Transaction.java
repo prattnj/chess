@@ -15,6 +15,6 @@ public interface Transaction {
      * @param commit A boolean representing whether to commit the changes
      * @throws DataAccessException
      */
-    void closeTransaction(boolean commit) throws DataAccessException;
+    void closeTransaction(boolean commit);
 
 }
