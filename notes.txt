@@ -1,0 +1,13 @@
+Add tip: equals/hashCode in Move/Position?
+Change EscapeSequences.java to add em space
+
+unused keywords:
+transient
+synchronized
+short, long, double, float, unsigned, byte
+assert
+do
+finally
+native
+strictfp
+volatile
