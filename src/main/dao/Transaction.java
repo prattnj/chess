@@ -17,4 +17,10 @@ public interface Transaction {
      */
     void closeTransaction(boolean commit);
 
+    /**
+     * Determines whether this transaction is open
+     * @return whether this transaction is open
+     */
+    boolean isOpen() throws DataAccessException;
+
 }

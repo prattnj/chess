@@ -86,15 +86,15 @@ public class WebSocketTests {
 
         bobClient.setServerHost("localhost");
         bobClient.setServerPort(TestFactory.getServerPort());
-        bobClient.setContext("/connect");
+        bobClient.setContext("/ws");
 
         jamesClient.setServerHost("localhost");
         jamesClient.setServerPort(TestFactory.getServerPort());
-        jamesClient.setContext("/connect");
+        jamesClient.setContext("/ws");
 
         alfredClient.setServerHost("localhost");
         alfredClient.setServerPort(TestFactory.getServerPort());
-        alfredClient.setContext("/connect");
+        alfredClient.setContext("/ws");
 
 
         //populate database

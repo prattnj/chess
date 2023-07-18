@@ -93,7 +93,7 @@ public class PersistenceTest {
         //Will wait on the statement scanner.nextLine() till you push enter in the terminal window.
         //You may need to follow the steps under the heading "Setting up for the Persistence Test" in the "How To Get Started"
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Shut down the server, wait a few seconds, then restart the server. Then press ENTER.");
+        System.out.println("Shut down and restart the server. Then press ENTER.");
         scanner.nextLine();
 
 

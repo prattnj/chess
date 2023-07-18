@@ -19,7 +19,7 @@ public class CreateGameService extends Service {
 
         CreateGameRequest req = (CreateGameRequest) request;
 
-        GameBean game = new GameBean(Util.getRandomID(3), null, null, req.getGameName(), Factory.getNewGame().toString());
+        GameBean game = new GameBean(Util.getRandomID(5), null, null, req.getGameName(), Factory.getNewGame().toString());
         gdao.insert(game);
 
         return new CreateGameResponse(game.getGameID());

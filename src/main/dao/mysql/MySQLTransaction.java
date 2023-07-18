@@ -5,6 +5,7 @@ import dataAccess.DataAccessException;
 import dataAccess.Database;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 public class MySQLTransaction implements Transaction {
 
@@ -26,7 +27,16 @@ public class MySQLTransaction implements Transaction {
         db.closeConnection(commit);
     }
 
-    public static Connection getMySQLConnection() throws DataAccessException {
+    @Override
+    public boolean isOpen() throws DataAccessException {
+        try {
+            return !db.getConnection().isClosed();
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
+    public Connection getMySQLConnection() throws DataAccessException {
         return db.getConnection();
     }
 }

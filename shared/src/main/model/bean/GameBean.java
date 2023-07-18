@@ -9,7 +9,7 @@ public class GameBean {
     private Integer whitePlayerID;
     private Integer blackPlayerID;
     private final String gameName;
-    private final String game;
+    private String game;
 
     /**
      * Basic constructor
@@ -53,5 +53,9 @@ public class GameBean {
 
     public void setBlackPlayerID(int blackPlayerID) {
         this.blackPlayerID = blackPlayerID;
+    }
+
+    public void setGame(String game) {
+        this.game = game;
     }
 }

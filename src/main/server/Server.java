@@ -25,6 +25,9 @@ public class Server {
         // Set up static files
         Spark.externalStaticFileLocation("web");
 
+        // Set up web socket
+        Spark.webSocket("/ws", new WebSocketHandler());
+
         // Set up endpoints
         Spark.post("/clear", new Handler(new ClearService(), null, false));
         Spark.post("/user/register", new Handler(new RegisterService(), RegisterRequest.class, false));

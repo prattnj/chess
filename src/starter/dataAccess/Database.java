@@ -77,7 +77,7 @@ public class Database {
                 conn.commit();
             } else {
                 //If we find out something went wrong, pass a false into closeConnection and this
-                //will rollback any changes we made during this connection
+                //will roll back any changes we made during this connection
                 conn.rollback();
             }
 

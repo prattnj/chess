@@ -1,5 +1,6 @@
 package ui;
 
+import chess.ChessGame;
 import model.request.BaseRequest;
 import model.request.CreateGameRequest;
 import model.request.JoinGameRequest;
@@ -8,7 +9,6 @@ import model.response.CreateGameResponse;
 import model.response.ListGamesObj;
 import model.response.ListGamesResponse;
 import util.Esc;
-import util.Factory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,18 +27,18 @@ public class PostLoginUI extends PreLoginUI {
         while(true) {
             out.print(Esc.SET_TEXT_COLOR_GREEN + "\nchess> " + Esc.SET_TEXT_COLOR_WHITE);
             String input = in.nextLine().toLowerCase();
-            switch (input) {
+            String[] parts = input.split(" ");
+            switch (parts[0]) {
                 case "h", "help" -> help();
                 case "c", "create" -> create();
                 case "ls", "list" -> list();
-                case "j", "join" -> join();
-                case "o", "observe" -> observe();
+                case "j", "join" -> join(input);
+                case "o", "observe" -> observe(input);
                 case "lg", "logout" -> {if (logout()) return;}
                 case "q", "quit" -> quit();
                 default -> out.println("Unknown command. " + HELP);
             }
         }
-
     }
 
     private void help() {
@@ -46,8 +46,8 @@ public class PostLoginUI extends PreLoginUI {
         out.println("\"h\", \"help\": See options");
         out.println("\"c\", \"create\": Create a new game");
         out.println("\"ls\", \"list\": List all existing games");
-        out.println("\"j\", \"join\": Join an existing game");
-        out.println("\"o\", \"observe\": Observe a game");
+        out.println("\"j <gameID>\", \"join <gameID>\": Join an existing game specified by the given game ID");
+        out.println("\"o <gameID>\", \"observe <gameID>\": Observe a game specified by the given game ID");
         out.println("\"lg\", \"logout\": Logout");
         out.println("\"q\", \"quit\": Exit the program");
     }
@@ -88,42 +88,51 @@ public class PostLoginUI extends PreLoginUI {
         else for (ListGamesObj game : allGames) printGame(game);
     }
 
-    private void join() {
-        out.print("Enter the ID of the game you'd like to join: ");
-        int gameID = Integer.parseInt(in.nextLine());
+    private void join(String input) {
+
+        String[] parts = input.split(" ");
+        if (parts.length < 2) {
+            out.println("Must specify a game ID. Enter 'ls' to see games.");
+            return;
+        }
+
+        int gameID = Integer.parseInt(parts[1]);
+
         out.print("Would you like to play as (b)lack or (w)hite? ");
         String color = in.nextLine();
         if (color.equalsIgnoreCase("b")) color = "black";
         else if (color.equalsIgnoreCase("w")) color = "white";
+        else if (!color.equalsIgnoreCase("white") && !color.equalsIgnoreCase("black")) {
+            out.println("Please enter a valid color.");
+        }
 
+        joinOrObserve(color, gameID, true);
+    }
+
+    private void observe(String input) {
+        String[] parts = input.split(" ");
+        if (parts.length < 2) {
+            out.println("Must specify a game ID. Enter 'ls' to see games.");
+            return;
+        }
+
+        int gameID = Integer.parseInt(parts[1]);
+
+        joinOrObserve(null, gameID, false);
+    }
+
+    private void joinOrObserve(String color, int gameID, boolean isJoin) {
         JoinGameRequest request = new JoinGameRequest(color, gameID);
         BaseResponse response = server.join(request, authToken);
         if (response.isSuccess()) {
-            out.println("Successfully joined game " + gameID + " as the " + color + " player.");
-            drawGame(Factory.getNewGame().getBoard().toString());
+            updateGames();
+            out.println("Successfully joined game " + gameID);
+            new GameUI().start(gameID, ChessGame.TeamColor.valueOf((isJoin ? color : "white").toUpperCase()), isJoin);
         }
         else {
             out.println("Could not join game: ");
             printError(response.getMessage());
         }
-        updateGames();
-    }
-
-    private void observe() {
-        out.print("Enter the ID of the game you'd like to observe: ");
-        int gameID = Integer.parseInt(in.nextLine());
-
-        JoinGameRequest request = new JoinGameRequest(null, gameID);
-        BaseResponse response = server.join(request, authToken);
-        if (response.isSuccess()) {
-            out.println("Successfully observing game " + gameID);
-            drawGame(Factory.getNewGame().getBoard().toString());
-        }
-        else {
-            out.println("Could not observe game: ");
-            printError(response.getMessage());
-        }
-        updateGames();
     }
 
     private void updateGames() {
@@ -141,65 +150,5 @@ public class PostLoginUI extends PreLoginUI {
         out.println("White: " + (game.getWhiteUsername() == null ? "" : game.getWhiteUsername()));
         out.println("Black: " + (game.getBlackUsername() == null ? "" : game.getBlackUsername()));
         out.print("\n");
-    }
-
-    private void drawGame(String board) {
-
-        // WHITE'S PERSPECTIVE
-        printAlphaLabel(true);
-        printBoard(board, true);
-        printAlphaLabel(true);
-
-        // separator
-        out.print(Esc.SET_BG_COLOR_WHITE + "   ");
-        for (int i = 0; i < 8; i++) out.print(Esc.EMPTY);
-        out.print("   " + Esc.RESET_BG_COLOR + "\n");
-
-        // BLACK'S PERSPECTIVE
-        printAlphaLabel(false);
-        printBoard(board, false);
-        printAlphaLabel(false);
-    }
-
-    private void printAlphaLabel(boolean isWhite) {
-        out.print(Esc.SET_BG_COLOR_LIGHT_GREY + Esc.SET_TEXT_COLOR_BLACK + "   ");
-        if (isWhite) for (int i = 0; i < 8; i++) out.print(" " + (char)('a' + i) + "\u2003");
-        else for (int i = 7; i >= 0; i--) out.print(" " + (char)('a' + i) + "\u2003");
-        out.println("   " + Esc.RESET_BG_COLOR);
-    }
-
-    private void printBoard(String board, boolean isWhite) {
-        boolean isLight = true;
-        for (int i = 0; i < 8; i++) {
-            int rowIndex = isWhite ? 8 - i : i + 1;
-            out.print(Esc.SET_BG_COLOR_LIGHT_GREY + " " + rowIndex + " ");
-            for (int j = 0; j < 8; j++) {
-                int index = isWhite ? ((7 - i) * 8) + j : (i * 8) + (7 - j);
-                if (isLight) out.print(Esc.SET_BG_COLOR_LIGHT_SQUARE);
-                else out.print(Esc.SET_BG_COLOR_DARK_SQUARE);
-                out.print(renderPiece(board.charAt(index)));
-                isLight = !isLight;
-            }
-            out.println(Esc.SET_BG_COLOR_LIGHT_GREY + " " + rowIndex + " " + Esc.RESET_BG_COLOR);
-            isLight = !isLight;
-        }
-    }
-
-    private String renderPiece(char c) {
-        return switch (c) {
-            case 'K' -> Esc.WHITE_KING;
-            case 'Q' -> Esc.WHITE_QUEEN;
-            case 'R' -> Esc.WHITE_ROOK;
-            case 'N' -> Esc.WHITE_KNIGHT;
-            case 'B' -> Esc.WHITE_BISHOP;
-            case 'P' -> Esc.WHITE_PAWN;
-            case 'k' -> Esc.BLACK_KING;
-            case 'q' -> Esc.BLACK_QUEEN;
-            case 'r' -> Esc.BLACK_ROOK;
-            case 'n' -> Esc.BLACK_KNIGHT;
-            case 'b' -> Esc.BLACK_BISHOP;
-            case 'p' -> Esc.BLACK_PAWN;
-            default -> Esc.EMPTY;
-        };
     }
 }

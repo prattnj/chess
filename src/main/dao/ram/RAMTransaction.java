@@ -17,4 +17,9 @@ public class RAMTransaction implements Transaction {
     @Override
     public void closeTransaction(boolean commit) {
     }
+
+    @Override
+    public boolean isOpen() {
+        return true;
+    }
 }

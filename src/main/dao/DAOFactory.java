@@ -13,18 +13,18 @@ import util.Util;
 
 public class DAOFactory {
 
-    public static UserDAO getNewUserDAO() throws DataAccessException {
-        if (Util.CURRENT_DAO_TYPE.equals("mysql")) return new MySQLUserDAO(MySQLTransaction.getMySQLConnection());
+    public static UserDAO getNewUserDAO(Transaction transaction) throws DataAccessException {
+        if (Util.CURRENT_DAO_TYPE.equals("mysql")) return new MySQLUserDAO(((MySQLTransaction) transaction).getMySQLConnection());
         else return RAMUserDAO.getInstance();
     }
 
-    public static GameDAO getNewGameDAO() throws DataAccessException {
-        if (Util.CURRENT_DAO_TYPE.equals("mysql")) return new MySQLGameDAO(MySQLTransaction.getMySQLConnection());
+    public static GameDAO getNewGameDAO(Transaction transaction) throws DataAccessException {
+        if (Util.CURRENT_DAO_TYPE.equals("mysql")) return new MySQLGameDAO(((MySQLTransaction) transaction).getMySQLConnection());
         else return RAMGameDAO.getInstance();
     }
 
-    public static AuthTokenDAO getNewAuthTokenDAO() throws DataAccessException {
-        if (Util.CURRENT_DAO_TYPE.equals("mysql")) return new MySQLAuthTokenDAO(MySQLTransaction.getMySQLConnection());
+    public static AuthTokenDAO getNewAuthTokenDAO(Transaction transaction) throws DataAccessException {
+        if (Util.CURRENT_DAO_TYPE.equals("mysql")) return new MySQLAuthTokenDAO(((MySQLTransaction) transaction).getMySQLConnection());
         else return RAMAuthTokenDAO.getInstance();
     }
 

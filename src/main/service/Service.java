@@ -29,12 +29,12 @@ public abstract class Service {
 
         try {
             // Initialize DAOs and DB transaction
-            udao = DAOFactory.getNewUserDAO();
-            gdao = DAOFactory.getNewGameDAO();
-            adao = DAOFactory.getNewAuthTokenDAO();
-
             transaction = DAOFactory.getNewTransaction();
             transaction.openTransaction();
+
+            udao = DAOFactory.getNewUserDAO(transaction);
+            gdao = DAOFactory.getNewGameDAO(transaction);
+            adao = DAOFactory.getNewAuthTokenDAO(transaction);
 
             // Validate authToken
             if (authToken != null) if (adao.find(authToken) == null) throw new UnauthorizedException(Util.INVALID_TOKEN);

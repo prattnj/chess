@@ -1,13 +1,7 @@
 Add tip: equals/hashCode in Move/Position?
-Change EscapeSequences.java to add em space
-
-unused keywords:
-transient
-synchronized
-short, long, double, float, unsigned, byte
-assert
-do
-finally
-native
-strictfp
-volatile
+Add slf4j to client
+Test making move with only 1 player in the game
+Add Integer gameID to UserGameCommand
+Update message in persistence test
+Tyrus version: also add to spec that you need to add it to the server module
+Websocket /connect endpoint required by tests

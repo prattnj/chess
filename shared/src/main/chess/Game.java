@@ -25,8 +25,10 @@ public class Game implements ChessGame {
         String[] parts = str.split(";;");
         teamTurn = parts[0].equals("w") ? TeamColor.WHITE : TeamColor.BLACK;
         board = Factory.getNewBoard(parts[1]);
-        String[] moves = parts[2].split(";");
-        for (String s : moves) moveHistory.add(Factory.getNewMove(s));
+        if (parts.length > 2) {
+            String[] moves = parts[2].split(";");
+            for (String s : moves) moveHistory.add(Factory.getNewMove(s));
+        }
     }
 
     @Override
@@ -323,7 +325,7 @@ public class Game implements ChessGame {
             sb.append(move.toString());
             sb.append(";");
         }
-        sb.deleteCharAt(sb.length() - 1);
+        if (!moveHistory.isEmpty()) sb.deleteCharAt(sb.length() - 1);
         return sb.toString();
     }
 }

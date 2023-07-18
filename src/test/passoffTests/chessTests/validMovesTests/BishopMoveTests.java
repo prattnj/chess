@@ -4,7 +4,6 @@ import chess.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -113,7 +112,6 @@ public class BishopMoveTests {
 
         //check
         game.setBoard(board);
-        Collection<ChessMove> test = game.validMoves(position);
         assertEquals(validMoves, game.validMoves(position));
     }
 }
