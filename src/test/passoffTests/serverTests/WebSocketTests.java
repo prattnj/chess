@@ -47,8 +47,7 @@ public class WebSocketTests {
 
     @BeforeAll
     static void init(){
-        serverFacade = new TestServerFacade("localhost", TestFactory
-                .getServerPort());
+        serverFacade = new TestServerFacade(TestFactory.getServerHost(), TestFactory.getServerPort());
         serverFacade.clear();
 
         bobClient = new TestClient();
@@ -84,15 +83,15 @@ public class WebSocketTests {
         alfredExecutor = Executors.newSingleThreadExecutor();
         testExecutor = Executors.newSingleThreadExecutor();
 
-        bobClient.setServerHost("localhost");
+        bobClient.setServerHost(TestFactory.getServerHost());
         bobClient.setServerPort(TestFactory.getServerPort());
         bobClient.setContext("/ws");
 
-        jamesClient.setServerHost("localhost");
+        jamesClient.setServerHost(TestFactory.getServerHost());
         jamesClient.setServerPort(TestFactory.getServerPort());
         jamesClient.setContext("/ws");
 
-        alfredClient.setServerHost("localhost");
+        alfredClient.setServerHost(TestFactory.getServerHost());
         alfredClient.setServerPort(TestFactory.getServerPort());
         alfredClient.setContext("/ws");
 

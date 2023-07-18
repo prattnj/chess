@@ -34,7 +34,7 @@ public class StandardAPITests {
         createRequest = new TestModels.TestCreateRequest();
         createRequest.gameName = "testGame";
 
-        serverFacade = new TestServerFacade("localhost", TestFactory.getServerPort());
+        serverFacade = new TestServerFacade(TestFactory.getServerHost(), TestFactory.getServerPort());
     }
 
     @BeforeEach

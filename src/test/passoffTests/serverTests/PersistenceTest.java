@@ -1,5 +1,6 @@
 package passoffTests.serverTests;
 
+import passoffTests.TestFactory;
 import passoffTests.testClasses.TestModels;
 import passoffTests.obfuscatedTestClasses.TestServerFacade;
 import org.junit.jupiter.api.*;
@@ -30,7 +31,7 @@ public class PersistenceTest {
         newUser.password = "testPassword";
         newUser.email = "testEmail";
 
-        serverFacade = new TestServerFacade("localhost", passoffTests.TestFactory.getServerPort());
+        serverFacade = new TestServerFacade(TestFactory.getServerHost(), passoffTests.TestFactory.getServerPort());
     }
 
     @BeforeEach
