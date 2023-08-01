@@ -72,4 +72,12 @@ public interface ChessGame {
      * @return the chess board
      */
     ChessBoard getBoard();
+
+    /**
+     * Determines whether this game has finished (either checkmate or resign)
+     * @return whether this game is over
+     */
+    boolean isOver();
+
+    void setIsOver(boolean isOver);
 }

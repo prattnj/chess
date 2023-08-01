@@ -9,15 +9,10 @@ import java.sql.SQLException;
  */
 public class Database {
 
-    private static final String MYSQL_URL = "localhost:3306/chess";
-    private static final String MYSQL_USERNAME = "pratt";
-    private static final String MYSQL_PASSWORD = System.getenv("MYSQL_PASSWORD");
-
     /**
      * The connection to the database
      */
-    private static Connection conn;
-    private static final String DATABASE_DRIVER = "jdbc:mysql://";
+    private Connection conn;
 
     /**
      * Initiates a connection to the database
@@ -27,16 +22,14 @@ public class Database {
     public Connection openConnection() throws DataAccessException {
         try {
             //shouldn't try to open an active connection
-            if (conn != null){
-                throw new DataAccessException("Database connection already open");
-            }
+            if (conn != null) throw new DataAccessException("Database connection already open");
 
             //The Structure for this Connection is driver:language:path
             //The path assumes you start in the root of your project unless given a non-relative path
-            final String CONNECTION_URL = DATABASE_DRIVER + MYSQL_URL;
+            final String CONNECTION_URL = "jdbc:mysql://localhost:3306/chess";
 
             // Open a database connection to the file given in the path
-            conn = DriverManager.getConnection(CONNECTION_URL, MYSQL_USERNAME, MYSQL_PASSWORD);
+            conn = DriverManager.getConnection(CONNECTION_URL, "pratt", System.getenv("MYSQL_PASSWORD"));
 
             // Start a transaction
             conn.setAutoCommit(false);
@@ -54,11 +47,8 @@ public class Database {
      * @throws DataAccessException
      */
     public Connection getConnection() throws DataAccessException {
-        if (conn == null) {
-            return openConnection();
-        } else {
-            return conn;
-        }
+        if (conn == null) return openConnection();
+        else return conn;
     }
 
     /**
@@ -67,19 +57,12 @@ public class Database {
      * @throws DataAccessException
      */
     public void closeConnection(boolean commit) {
-        if (conn == null) {
-            return;
-        }
+        if (conn == null) return;
 
         try {
-            if (commit) {
-                //This will commit the changes to the database
-                conn.commit();
-            } else {
-                //If we find out something went wrong, pass a false into closeConnection and this
-                //will roll back any changes we made during this connection
-                conn.rollback();
-            }
+
+            if (commit) conn.commit();
+            else conn.rollback();
 
             conn.close();
             conn = null;

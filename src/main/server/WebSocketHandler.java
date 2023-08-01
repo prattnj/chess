@@ -1,8 +1,6 @@
 package server;
 
-import chess.ChessGame;
-import chess.ChessMove;
-import chess.InvalidMoveException;
+import chess.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dao.*;
@@ -33,12 +31,10 @@ public class WebSocketHandler {
     private int currentGameID;
     private int currentUserID;
     private GameBean currentBean;
-    private Transaction transaction;
+    private final Transaction transaction = DAOFactory.getNewTransaction();
 
     @OnWebSocketMessage
     public void onMessage(Session session, String message) {
-
-        transaction = DAOFactory.getNewTransaction();
         root = session;
 
         try {
@@ -81,8 +77,6 @@ public class WebSocketHandler {
                 case RESIGN -> resign();
                 case LEAVE -> leave();
             }
-
-            //transaction.closeTransaction(true);
         } catch (Exception e) {
             transaction.closeTransaction(false);
             e.printStackTrace();
@@ -173,9 +167,6 @@ public class WebSocketHandler {
 
         // send a NOTIFICATION to everyone else that the root client resigned
         broadcast("The " + color + " player has resigned");
-
-        // close connections to all relevant clients
-        for (Session s : cache.get(currentGameID)) if (s.isOpen()) s.close(123, "resign");
 
         // delete game
         gdao.delete(currentGameID);

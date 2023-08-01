@@ -13,6 +13,7 @@ public class Game implements ChessGame {
     private TeamColor teamTurn;
     private ChessBoard board;
     private final List<ChessMove> moveHistory = new ArrayList<>();
+    private boolean isOver = false;
 
     public Game() {
         teamTurn = TeamColor.WHITE;
@@ -23,10 +24,11 @@ public class Game implements ChessGame {
     public Game(String str) {
         // WARNING: Assumes that str is formatted like this.toString()
         String[] parts = str.split(";;");
-        teamTurn = parts[0].equals("w") ? TeamColor.WHITE : TeamColor.BLACK;
-        board = Factory.getNewBoard(parts[1]);
-        if (parts.length > 2) {
-            String[] moves = parts[2].split(";");
+        isOver = Boolean.parseBoolean(parts[0]);
+        teamTurn = parts[1].equals("w") ? TeamColor.WHITE : TeamColor.BLACK;
+        board = Factory.getNewBoard(parts[2]);
+        if (parts.length > 3) {
+            String[] moves = parts[3].split(";");
             for (String s : moves) moveHistory.add(Factory.getNewMove(s));
         }
     }
@@ -77,8 +79,10 @@ public class Game implements ChessGame {
         if (!validMoves(move.getStartPosition()).contains(move)) throw new InvalidMoveException("Error: invalid move");
 
         // At this point, move is valid and can be executed
-        board.addPiece(move.getEndPosition(), mover);
         board.addPiece(move.getStartPosition(), null);
+        if (move.getPromotionPiece() != null) {
+            board.addPiece(move.getEndPosition(), Factory.getNewPiece(move.getPromotionPiece(), mover.getTeamColor()));
+        } else board.addPiece(move.getEndPosition(), mover);
 
         // Special case for castling: also move the rook
         if (mover.getPieceType() == ChessPiece.PieceType.KING) {
@@ -102,6 +106,10 @@ public class Game implements ChessGame {
         }
 
         moveHistory.add(move);
+
+        // Determine whether this move ended the game
+        TeamColor opponent = teamTurn == TeamColor.WHITE ? TeamColor.BLACK : TeamColor.WHITE;
+        if (isInCheckmate(opponent) || isInStalemate(opponent)) isOver = true;
 
         // Update whose turn it is
         toggleTurn();
@@ -139,6 +147,16 @@ public class Game implements ChessGame {
     @Override
     public ChessBoard getBoard() {
         return board;
+    }
+
+    @Override
+    public boolean isOver() {
+        return isOver;
+    }
+
+    @Override
+    public void setIsOver(boolean isOver) {
+        this.isOver = isOver;
     }
 
     private Collection<ChessMove> addCastling(ChessPiece king) {
@@ -317,6 +335,8 @@ public class Game implements ChessGame {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        sb.append(isOver);
+        sb.append(";;");
         sb.append(teamTurn == TeamColor.WHITE ? "w" : "b");
         sb.append(";;");
         sb.append(board.toString());

@@ -29,7 +29,7 @@ public class DAOFactory {
     }
 
     public static Transaction getNewTransaction() {
-        if (Util.CURRENT_DAO_TYPE.equals("mysql")) return MySQLTransaction.getInstance();
+        if (Util.CURRENT_DAO_TYPE.equals("mysql")) return new MySQLTransaction();
         else return RAMTransaction.getInstance();
     }
 

@@ -35,11 +35,11 @@ public class TestFactory {
     //Server APIs
     //------------------------------------------------------------------------------------------------------------------
     public static String getServerHost(){
-        return "136.36.39.119";
+        return "localhost";
     }
 
     public static String getServerPort() {
-        return "80";
+        return "3002";
     }
     //------------------------------------------------------------------------------------------------------------------
 
