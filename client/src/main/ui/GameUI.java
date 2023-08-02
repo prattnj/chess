@@ -12,6 +12,7 @@ import util.Factory;
 import webSocketMessages.userCommands.UserGameCommand;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 public class GameUI extends Client implements WSConnection.GameUI {
 
@@ -74,6 +75,11 @@ public class GameUI extends Client implements WSConnection.GameUI {
     }
 
     private void move() {
+        if (game.isOver()) {
+            out.println("The game is over. No moves can be made.");
+            return;
+        }
+
         out.print("Enter the position of the piece to move (a5, d4...): ");
         String startPosStr = in.nextLine();
         if (!validatePosition(startPosStr)) {
@@ -128,7 +134,9 @@ public class GameUI extends Client implements WSConnection.GameUI {
         }
         ChessPosition pos = Factory.getNewPosition(posStr);
         Collection<ChessMove> possibleMoves = game.validMoves(pos);
-        // todo draw board with possibleMoves in mind
+        Collection<ChessPosition> endPositions = new HashSet<>();
+        for (ChessMove m : possibleMoves) endPositions.add(m.getEndPosition());
+        drawBoard(endPositions);
     }
 
     private void resign() {
@@ -152,6 +160,12 @@ public class GameUI extends Client implements WSConnection.GameUI {
     public void setGame(ChessGame game) {
         this.game = game;
         drawBoard();
+        ChessGame.TeamColor color = game.getTeamTurn();
+        ChessGame.TeamColor otherColor = color == ChessGame.TeamColor.WHITE ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
+        if (game.isOver()) {
+            if (game.isInCheckmate(color)) out.println("Checkmate! The " + otherColor + " player wins.");
+            else if (game.isInStalemate(color)) out.println("Stalemate! The game is over.");
+        } else if (game.isInCheck(color)) out.println("The " + color + " player is in check.");
         basePrompt();
     }
 
@@ -164,11 +178,15 @@ public class GameUI extends Client implements WSConnection.GameUI {
 
     // HELPER METHODS
     public void drawBoard() {
+        drawBoard(new HashSet<>());
+    }
+
+    public void drawBoard(Collection<ChessPosition> endPositions) {
         if (game == null) return;
         out.print("\n");
         boolean isWhite = color != ChessGame.TeamColor.BLACK;
         printAlphaLabel(isWhite);
-        printBoard(game.getBoard().toString(), isWhite);
+        printBoard(game.getBoard().toString(), isWhite, endPositions);
         printAlphaLabel(isWhite);
         out.print(Esc.SET_TEXT_COLOR_WHITE);
     }
@@ -180,14 +198,19 @@ public class GameUI extends Client implements WSConnection.GameUI {
         out.println("   " + Esc.RESET_BG_COLOR);
     }
 
-    private void printBoard(String board, boolean isWhite) {
+    private void printBoard(String board, boolean isWhite, Collection<ChessPosition> endPositions) {
         boolean isLight = true;
         for (int i = 0; i < 8; i++) {
             int rowIndex = isWhite ? 8 - i : i + 1;
             out.print(Esc.SET_BG_COLOR_LIGHT_GREY + " " + rowIndex + " ");
             for (int j = 0; j < 8; j++) {
                 int index = isWhite ? ((7 - i) * 8) + j : (i * 8) + (7 - j);
-                if (isLight) out.print(Esc.SET_BG_COLOR_LIGHT_SQUARE);
+                int columnIndex = isWhite ? j + 1 : 8 - j;
+                ChessPosition position = Factory.getNewPosition(rowIndex, columnIndex);
+
+                if (isLight && endPositions.contains(position)) out.print(Esc.SET_BG_COLOR_GREEN);
+                else if (isLight) out.print(Esc.SET_BG_COLOR_LIGHT_SQUARE);
+                else if (endPositions.contains(position)) out.print(Esc.SET_BG_COLOR_DARK_GREEN);
                 else out.print(Esc.SET_BG_COLOR_DARK_SQUARE);
                 out.print(renderPiece(board.charAt(index)));
                 isLight = !isLight;
