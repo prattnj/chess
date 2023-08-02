@@ -1,5 +1,6 @@
 package daoTests;
 
+import chess.ChessGame;
 import dao.GameDAO;
 import dao.mysql.MySQLGameDAO;
 import dataAccess.DataAccessException;
@@ -59,4 +60,11 @@ public class GameDAOTest {
         assertNull(dao.find(dummy1.getGameID()));
     }
 
+    @Test
+    public void testClaimSpot() throws DataAccessException {
+        dao.insert(dummy1);
+        dao.claimSpot(dummy1.getGameID(), ChessGame.TeamColor.WHITE, 0);
+        GameBean bean = dao.find(dummy1.getGameID());
+        assertNull(bean.getWhitePlayerID());
+    }
 }

@@ -169,8 +169,11 @@ public class WebSocketHandler {
         // send a NOTIFICATION to everyone else that the root client resigned
         broadcast("The " + color + " player has resigned");
 
-        // delete game
-        gdao.delete(currentGameID);
+        // mark game as over
+        ChessGame game = Factory.getNewGame(currentBean.getGame());
+        game.setIsOver(true);
+        currentBean.setGame(game.toString());
+        gdao.update(currentBean);
         cache.remove(currentGameID);
     }
 
@@ -207,7 +210,7 @@ public class WebSocketHandler {
 
     private String getColor() {
         if (currentBean.getWhitePlayerID() != null && currentBean.getWhitePlayerID() == currentUserID) return "white";
-        else if (currentBean.getWhitePlayerID() != null && currentBean.getBlackPlayerID() == currentUserID) return "black";
+        else if (currentBean.getBlackPlayerID() != null && currentBean.getBlackPlayerID() == currentUserID) return "black";
         else return null;
     }
 
