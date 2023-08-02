@@ -8,8 +8,10 @@ import model.response.BaseResponse;
 import model.response.CreateGameResponse;
 import model.response.ListGamesObj;
 import model.response.ListGamesResponse;
+import net.WSConnection;
 import util.Esc;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,6 +27,18 @@ public class PostLoginUI extends PreLoginUI {
         updateGames();
 
         while(true) {
+
+            // refresh connection if necessary
+            if (connection.isClosed()) {
+                try {
+                    connection = new WSConnection(new URI("ws://" + host + ":" + port + "/ws"));
+                    connection.connect();
+                } catch (Exception e) {
+                    printError("Unable to connect to server. Try again later.");
+                    quit();
+                }
+            }
+
             out.print(Esc.SET_TEXT_COLOR_GREEN + "\nchess> " + Esc.SET_TEXT_COLOR_WHITE);
             String input = in.nextLine().toLowerCase();
             String[] parts = input.split(" ");
@@ -84,6 +98,7 @@ public class PostLoginUI extends PreLoginUI {
     }
 
     private void list() {
+        updateGames();
         if (allGames.isEmpty()) out.println("There are currently no games.");
         else for (ListGamesObj game : allGames) printGame(game);
     }

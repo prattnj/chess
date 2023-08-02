@@ -4,7 +4,10 @@ import model.request.LoginRequest;
 import model.request.RegisterRequest;
 import model.response.BaseResponse;
 import model.response.LoginResponse;
+import net.WSConnection;
 import util.Esc;
+
+import java.net.URI;
 
 public class PreLoginUI extends Client {
 
@@ -15,6 +18,18 @@ public class PreLoginUI extends Client {
         out.println("(" + HELP + ")");
 
         while (true) {
+
+            // refresh connection if necessary
+            if (connection.isClosed()) {
+                try {
+                    connection = new WSConnection(new URI("ws://" + host + ":" + port + "/ws"));
+                    connection.connect();
+                } catch (Exception e) {
+                    printError("Unable to connect to server. Try again later.");
+                    quit();
+                }
+            }
+
             out.print(Esc.SET_TEXT_COLOR_YELLOW + "\nchess> " + Esc.SET_TEXT_COLOR_WHITE);
             String input = in.nextLine().toLowerCase();
             switch (input) {
@@ -87,8 +102,14 @@ public class PreLoginUI extends Client {
         BaseResponse response = server.login(request);
         if (response.isSuccess()) authToken = ((LoginResponse) response).getAuthToken();
         else {
-            out.println("Login failed:");
-            printError(response.getMessage());
+            RegisterRequest request1 = new RegisterRequest("test", "test", "test");
+            BaseResponse response1 = server.register(request1);
+            if (response1.isSuccess()) authToken = ((LoginResponse) response1).getAuthToken();
+            else {
+                out.println("Login failed:");
+                printError(response.getMessage());
+            }
+            return response1.isSuccess();
         }
         return response.isSuccess();
     }
