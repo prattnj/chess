@@ -60,6 +60,7 @@ public class Database {
         if (conn == null) return;
 
         try {
+            if (conn.isClosed()) return;
 
             if (commit) conn.commit();
             else conn.rollback();
@@ -67,8 +68,7 @@ public class Database {
             conn.close();
             conn = null;
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ignored) {
         }
     }
 }

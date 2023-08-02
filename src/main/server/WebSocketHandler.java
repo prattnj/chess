@@ -87,6 +87,12 @@ public class WebSocketHandler {
         if (transaction != null && transaction.isOpen()) transaction.closeTransaction(true);
     }
 
+    @OnWebSocketError
+    public void onError(Throwable e) {
+        System.out.println("WS ERROR");
+        e.printStackTrace();
+    }
+
     // COMMAND LOGIC
     private void join(JoinPlayerUC command) throws DataAccessException {
 
@@ -174,7 +180,6 @@ public class WebSocketHandler {
         game.setIsOver(true);
         currentBean.setGame(game.toString());
         gdao.update(currentBean);
-        cache.remove(currentGameID);
     }
 
     private void leave() throws DataAccessException {

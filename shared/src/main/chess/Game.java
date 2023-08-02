@@ -68,6 +68,8 @@ public class Game implements ChessGame {
     @Override
     public void makeMove(ChessMove move) throws InvalidMoveException {
 
+        if (isOver) throw new InvalidMoveException("Error: game is over");
+
         if (!Util.validatePosition(move.getStartPosition()) || !Util.validatePosition(move.getEndPosition())){
             throw new InvalidMoveException("Error: malformed move");
         }
