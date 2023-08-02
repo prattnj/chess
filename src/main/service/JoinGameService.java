@@ -35,11 +35,11 @@ public class JoinGameService extends Service {
 
         // Verify that this team color isn't taken
         Exception ex = new ForbiddenException("color is taken");
-        if (color == ChessGame.TeamColor.WHITE && game.getWhitePlayerID() != null) throw ex;
-        else if (color == ChessGame.TeamColor.BLACK && game.getBlackPlayerID() != null) throw ex;
+        if (color == ChessGame.TeamColor.WHITE && game.getWhitePlayerID() != null && game.getWhitePlayerID() != userID) throw ex;
+        else if (color == ChessGame.TeamColor.BLACK && game.getBlackPlayerID() != null && game.getBlackPlayerID() != userID) throw ex;
 
         // This is a valid request
-        if (color != null){
+        if (color != null) {
             if (color == ChessGame.TeamColor.WHITE) game.setWhitePlayerID(userID);
             else game.setBlackPlayerID(userID);
         }

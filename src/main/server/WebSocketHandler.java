@@ -71,8 +71,7 @@ public class WebSocketHandler {
 
             // If this is a join of any kind, it has already been sent to the server via /games/join from the PostLoginUI client.
             switch (command.getCommandType()) {
-                case JOIN_OBSERVER -> join(null);
-                case JOIN_PLAYER -> join(gson.fromJson(message, JoinPlayerUC.class).getPlayerColor());
+                case JOIN_OBSERVER, JOIN_PLAYER -> join(gson.fromJson(message, JoinPlayerUC.class));
                 case MAKE_MOVE -> makeMove(gson.fromJson(message, MakeMoveUC.class));
                 case RESIGN -> resign();
                 case LEAVE -> leave();
@@ -89,7 +88,9 @@ public class WebSocketHandler {
     }
 
     // COMMAND LOGIC
-    private void join(ChessGame.TeamColor color) throws DataAccessException {
+    private void join(JoinPlayerUC command) throws DataAccessException {
+
+        ChessGame.TeamColor color = command.getPlayerColor();
 
         // make sure this slot isn't already taken (for joins rather than observes)
         if (color != null) {
@@ -190,9 +191,7 @@ public class WebSocketHandler {
     // HELPER METHODS
     private void send(Session session, String message) {
         try {
-            if (session.isOpen()) {
-                session.getRemote().sendString(message);
-            }
+            if (session.isOpen()) session.getRemote().sendString(message);
         } catch (IOException e) {
             e.printStackTrace();
         }
