@@ -26,31 +26,31 @@ public class ServerFacade {
     }
 
     public BaseResponse login(BaseRequest request) {
-        return execute("/user/login", request, null, "POST", LoginResponse.class);
+        return execute("/session", request, null, "POST", LoginResponse.class);
     }
 
     public BaseResponse register(BaseRequest request) {
-        return execute("/user/register", request, null, "POST", LoginResponse.class);
+        return execute("/user", request, null, "POST", LoginResponse.class);
     }
 
     public BaseResponse logout(String authToken) {
-        return execute("/user/logout", null, authToken, "POST", BaseResponse.class);
+        return execute("/session", null, authToken, "DELETE", BaseResponse.class);
     }
 
     public BaseResponse create(BaseRequest request, String authToken) {
-        return execute("/games/create", request, authToken, "POST", CreateGameResponse.class);
+        return execute("/game", request, authToken, "POST", CreateGameResponse.class);
     }
 
     public BaseResponse list(String authToken) {
-        return execute("/games/list", null, authToken, "GET", ListGamesResponse.class);
+        return execute("/game", null, authToken, "GET", ListGamesResponse.class);
     }
 
     public BaseResponse join(BaseRequest request, String authToken) {
-        return execute("/games/join", request, authToken, "POST", BaseResponse.class);
+        return execute("/game", request, authToken, "PUT", BaseResponse.class);
     }
 
     public BaseResponse clear() {
-        return execute("/clear", null, null, "POST", BaseResponse.class);
+        return execute("/", null, null, "DELETE", BaseResponse.class);
     }
 
     private BaseResponse execute(String endpoint, BaseRequest request, String authToken, String verb, Type successResp) {

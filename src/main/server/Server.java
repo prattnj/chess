@@ -29,13 +29,13 @@ public class Server {
         Spark.webSocket("/ws", new WebSocketHandler());
 
         // Set up endpoints
-        Spark.post("/clear", new Handler(new ClearService(), null, false));
-        Spark.post("/user/register", new Handler(new RegisterService(), RegisterRequest.class, false));
-        Spark.post("/user/login", new Handler(new LoginService(), LoginRequest.class, false));
-        Spark.post("/user/logout", new Handler(new LogoutService(), null, true));
-        Spark.post("/games/create", new Handler(new CreateGameService(), CreateGameRequest.class, true));
-        Spark.post("/games/join", new Handler(new JoinGameService(), JoinGameRequest.class, true));
-        Spark.get("/games/list", new Handler(new ListGamesService(), null, true));
+        Spark.delete("/", new Handler(new ClearService(), null, false));
+        Spark.post("/user", new Handler(new RegisterService(), RegisterRequest.class, false));
+        Spark.post("/session", new Handler(new LoginService(), LoginRequest.class, false));
+        Spark.delete("/session", new Handler(new LogoutService(), null, true));
+        Spark.post("/game", new Handler(new CreateGameService(), CreateGameRequest.class, true));
+        Spark.put("/game", new Handler(new JoinGameService(), JoinGameRequest.class, true));
+        Spark.get("/game", new Handler(new ListGamesService(), null, true));
 
         Spark.init();
     }
