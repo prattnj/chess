@@ -1,1 +1,6 @@
 Update message in persistence test
+
+personal:
+upgrade to REST endpoints
+error testing
+checkmate/stalemate/check testing

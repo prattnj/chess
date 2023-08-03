@@ -45,8 +45,8 @@ public class GameUI extends Client implements WSConnection.GameUI {
                 case "h", "help" -> help();
                 case "d", "draw" -> redraw();
                 case "l", "leave" -> {if (leave()) return;}
-                case "m", "move" -> move();
-                case "s", "show" -> show();
+                case "m", "move" -> move(input);
+                case "s", "show" -> show(input);
                 case "r", "resign" -> resign();
                 case "test" -> connection.send("testing");
                 default -> out.println("Unknown command. " + HELP);
@@ -74,21 +74,23 @@ public class GameUI extends Client implements WSConnection.GameUI {
         return true;
     }
 
-    private void move() {
+    private void move(String input) {
         if (game.isOver()) {
             out.println("The game is over. No moves can be made.");
             return;
         }
 
-        out.print("Enter the position of the piece to move (a5, d4...): ");
-        String startPosStr = in.nextLine();
-        if (!validatePosition(startPosStr)) {
-            printError("Invalid position.");
-            return;
+        String[] parts = input.split(" ");
+        String startPosStr;
+        String endPosStr;
+        if (parts.length > 2) {
+            startPosStr = parts[1];
+            endPosStr = parts[2];
+        } else {
+            startPosStr = prompt("Enter the position of the piece to move (a5, d4...): ");
+            endPosStr = prompt("Enter the position you'd like to move to: ");
         }
-        out.print("Enter the position you'd like to move to: ");
-        String endPosStr = in.nextLine();
-        if (!validatePosition(endPosStr)) {
+        if (!validatePosition(startPosStr) || !validatePosition(endPosStr)) {
             printError("Invalid position.");
             return;
         }
@@ -99,8 +101,7 @@ public class GameUI extends Client implements WSConnection.GameUI {
         // get promotion piece if applicable
         ChessPiece.PieceType promo = null;
         if (validMoves.contains(Factory.getNewMove(start, end, ChessPiece.PieceType.QUEEN))) {
-            out.print("Enter a piece type for pawn promotion (q, r, n, b): ");
-            char promoStr = in.nextLine().charAt(0);
+            char promoStr = prompt("Enter a piece type for pawn promotion (q, r, n, b): ").charAt(0);
             promo = switch (Character.toLowerCase(promoStr)) {
                 case 'q' -> ChessPiece.PieceType.QUEEN;
                 case 'r' -> ChessPiece.PieceType.ROOK;
@@ -125,9 +126,11 @@ public class GameUI extends Client implements WSConnection.GameUI {
         connection.send(gson.toJson(new MakeMoveUC(authToken, gameID, move)));
     }
 
-    private void show() {
-        out.print("Enter the position (i.e. a5, d4...) whose moves to show: ");
-        String posStr = in.nextLine();
+    private void show(String input) {
+        String[] parts = input.split(" ");
+        String posStr;
+        if (parts.length > 1) posStr = parts[1];
+        else posStr = prompt("Enter the position (i.e. a5, d4...) whose moves to show: ");
         if (!validatePosition(posStr)) {
             printError("Invalid position.");
             return;

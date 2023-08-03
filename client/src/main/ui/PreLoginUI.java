@@ -37,7 +37,7 @@ public class PreLoginUI extends Client {
                 case "l", "login" -> {if (login()) new PostLoginUI().start();}
                 case "r", "register" -> {if (register()) new PostLoginUI().start();}
                 case "q", "quit" -> {return;}
-                case "clear" -> clear();
+                case "cleardb" -> clear();
                 case "auto" -> {if (auto()) new PostLoginUI().start();}
                 default -> out.println("Unknown command. " + HELP);
             }
@@ -53,10 +53,8 @@ public class PreLoginUI extends Client {
     }
 
     private boolean login() {
-        out.print("Enter your username: ");
-        String username = in.nextLine();
-        out.print("Enter your password: ");
-        String password = in.nextLine();
+        String username = prompt("Enter your username: ");
+        String password = prompt("Enter your password: ");
         out.print("\n");
 
         LoginRequest request = new LoginRequest(username, password);
@@ -70,12 +68,9 @@ public class PreLoginUI extends Client {
     }
 
     private boolean register() {
-        out.print("Enter your username: ");
-        String username = in.nextLine();
-        out.print("Enter your password: ");
-        String password = in.nextLine();
-        out.print("Enter your email: ");
-        String email = in.nextLine();
+        String username = prompt("Enter your username: ");
+        String password = prompt("Enter your password: ");
+        String email = prompt("Enter your email: ");
         out.print("\n");
 
         RegisterRequest request = new RegisterRequest(username, password, email);
@@ -90,13 +85,14 @@ public class PreLoginUI extends Client {
 
     private void clear() {
         BaseResponse response = server.clear();
-        if (response.isSuccess()) out.println("Clear succeeded.");
+        if (response.isSuccess()) out.println("Database cleared.");
         else {
             out.println("Clear failed:");
             printError(response.getMessage());
         }
     }
 
+    // For testing purposes, registers or logs in a user named "test"
     private boolean auto() {
         LoginRequest request = new LoginRequest("test", "test");
         BaseResponse response = server.login(request);

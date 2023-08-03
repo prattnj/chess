@@ -44,7 +44,7 @@ public class PostLoginUI extends PreLoginUI {
             String[] parts = input.split(" ");
             switch (parts[0]) {
                 case "h", "help" -> help();
-                case "c", "create" -> create();
+                case "c", "create" -> create(input);
                 case "ls", "list" -> list();
                 case "j", "join" -> join(input);
                 case "o", "observe" -> observe(input);
@@ -58,7 +58,7 @@ public class PostLoginUI extends PreLoginUI {
     private void help() {
         out.println("Options:");
         out.println("\"h\", \"help\": See options");
-        out.println("\"c\", \"create\": Create a new game");
+        out.println("\"c <name>\", \"create <name>\": Create a new game");
         out.println("\"ls\", \"list\": List all existing games");
         out.println("\"j <gameID>\", \"join <gameID>\": Join an existing game specified by the given game ID");
         out.println("\"o <gameID>\", \"observe <gameID>\": Observe a game specified by the given game ID");
@@ -79,12 +79,15 @@ public class PostLoginUI extends PreLoginUI {
         return response.isSuccess();
     }
 
-    private void create() {
-        out.print("Give this new game a name: ");
-        String name = in.nextLine();
-        out.print("\n");
+    private void create(String input) {
 
-        BaseRequest request = new CreateGameRequest(name);
+        String[] parts = input.split(" ");
+        if (parts.length < 2) {
+            out.println("Must specify a game name.");
+            return;
+        }
+
+        BaseRequest request = new CreateGameRequest(parts[1]);
         BaseResponse response = server.create(request, authToken);
         if (response.isSuccess()) {
             int gameID = ((CreateGameResponse) response).getGameID();
@@ -113,12 +116,12 @@ public class PostLoginUI extends PreLoginUI {
 
         int gameID = Integer.parseInt(parts[1]);
 
-        out.print("Would you like to play as (b)lack or (w)hite? ");
-        String color = in.nextLine();
+        String color = prompt("Would you like to play as (b)lack or (w)hite? ");
         if (color.equalsIgnoreCase("b")) color = "black";
         else if (color.equalsIgnoreCase("w")) color = "white";
         else if (!color.equalsIgnoreCase("white") && !color.equalsIgnoreCase("black")) {
-            out.println("Please enter a valid color.");
+            out.println("Invalid color.");
+            return;
         }
 
         joinOrObserve(color, gameID, true);

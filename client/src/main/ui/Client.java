@@ -16,8 +16,8 @@ public class Client {
     protected static String authToken;
     protected static ServerFacade server;
     protected static WSConnection connection = null;
-    protected final Scanner in = new Scanner(System.in);
-    protected final PrintStream out = System.out;
+    protected static final Scanner in = new Scanner(System.in);
+    protected static final PrintStream out = System.out;
     protected final Gson gson = new Gson();
     protected final String HELP = "Enter \"h\" or \"help\" for options";
     protected static final String EXIT_MESSAGE = "Happy trails!";
@@ -42,13 +42,18 @@ public class Client {
         quit();
     }
 
-    protected static void printError(String error) {
-        System.out.println(Esc.SET_TEXT_COLOR_RED + error + Esc.SET_TEXT_COLOR_WHITE);
+    protected static String prompt(String message) {
+        out.print(message);
+        return in.nextLine();
     }
 
-    public static void quit() {
+    protected static void printError(String error) {
+        out.println(Esc.SET_TEXT_COLOR_RED + error + Esc.SET_TEXT_COLOR_WHITE);
+    }
+
+    protected static void quit() {
         if (connection != null) connection.close();
-        System.out.println(EXIT_MESSAGE);
+        out.println(EXIT_MESSAGE);
         System.exit(0);
     }
 }
