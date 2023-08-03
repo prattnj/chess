@@ -101,7 +101,7 @@ public class StandardAPITests {
         TestModels.TestLoginRegisterResult registerResult = serverFacade.register(registerRequest);
 
         assertEquals(200, serverFacade.getStatusCode());
-        assertTrue(registerResult.success, "server.server.Server did not say registration was successful for new user.");
+        assertTrue(registerResult.success, "server.Server did not say registration was successful for new user.");
         assertFalse(registerResult.message != null && registerResult.message.toLowerCase(Locale.ROOT).contains("error"), "Response gave an error message");
         assertEquals(newUser.username, registerResult.username, "Response did not have the same username as was registered");
         assertNotNull(registerResult.authToken, "Response did not contain an authentication string");
