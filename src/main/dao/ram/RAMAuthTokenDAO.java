@@ -9,7 +9,6 @@ import java.util.Map;
 public class RAMAuthTokenDAO implements AuthTokenDAO {
 
     private static final AuthTokenDAO instance = new RAMAuthTokenDAO();
-
     private final Map<String, AuthTokenBean> table = new HashMap<>();
 
     public static AuthTokenDAO getInstance() {

@@ -11,12 +11,10 @@ public class RAMTransaction implements Transaction {
     }
 
     @Override
-    public void openTransaction() {
-    }
+    public void openTransaction() {}
 
     @Override
-    public void closeTransaction(boolean commit) {
-    }
+    public void closeTransaction(boolean commit) {}
 
     @Override
     public boolean isOpen() {

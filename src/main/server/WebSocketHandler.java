@@ -38,38 +38,40 @@ public class WebSocketHandler {
         root = session;
 
         try {
-            // Start database transaction
+            // start database transaction
             transaction.openTransaction();
             udao = DAOFactory.getNewUserDAO(transaction);
             gdao = DAOFactory.getNewGameDAO(transaction);
             AuthTokenDAO adao = DAOFactory.getNewAuthTokenDAO(transaction);
 
+            // validate command
             UserGameCommand command = gson.fromJson(message, UserGameCommand.class);
             if (command == null) {
                 sendError("Error: invalid command");
                 return;
             }
 
-            // Validate authToken
+            // validate authToken
             if (adao.find(command.getAuthString()) == null) {
                 sendError("Error: invalid authToken");
                 return;
             }
             currentUserID = adao.find(command.getAuthString()).getUserID();
 
-            // Double check gameID
+            // double check gameID
             currentBean = gdao.find(command.getGameID());
             if (currentBean == null) {
                 sendError("Error: invalid gameID");
                 return;
             }
 
-            // Update current data
+            // update current data
             currentGameID = command.getGameID();
             cache.computeIfAbsent(currentGameID, k -> new HashSet<>());
             cache.get(currentGameID).add(session);
 
-            // If this is a join of any kind, it has already been sent to the server via /games/join from the PostLoginUI client.
+            // note: if this is a join of any kind, it has already been
+            // sent to the server via /games/join from the PostLoginUI client.
             switch (command.getCommandType()) {
                 case JOIN_OBSERVER, JOIN_PLAYER -> join(gson.fromJson(message, JoinPlayerUC.class));
                 case MAKE_MOVE -> makeMove(gson.fromJson(message, MakeMoveUC.class));
@@ -89,7 +91,6 @@ public class WebSocketHandler {
 
     @OnWebSocketError
     public void onError(Throwable e) {
-        System.out.println("WS ERROR");
         e.printStackTrace();
     }
 

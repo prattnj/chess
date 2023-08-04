@@ -22,5 +22,4 @@ public interface Transaction {
      * @return whether this transaction is open
      */
     boolean isOpen() throws DataAccessException;
-
 }

@@ -47,5 +47,4 @@ public interface AuthTokenDAO {
      * @throws DataAccessException
      */
     void clear() throws DataAccessException;
-
 }

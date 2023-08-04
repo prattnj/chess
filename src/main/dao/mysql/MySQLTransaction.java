@@ -9,13 +9,7 @@ import java.sql.SQLException;
 
 public class MySQLTransaction implements Transaction {
 
-    //private static final Transaction instance = new MySQLTransaction();
-
     private static final Database db = new Database();
-
-    //public static Transaction getInstance() {
-        //return instance;
-    //}
 
     @Override
     public void openTransaction() throws DataAccessException {

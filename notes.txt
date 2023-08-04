@@ -7,3 +7,5 @@ null pointer exception for moving empty square
 error testing
 checkmate/stalemate/check testing
 add AI
+add service tests
+add client tests

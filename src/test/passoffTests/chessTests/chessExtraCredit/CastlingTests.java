@@ -181,8 +181,8 @@ public class CastlingTests {
         game.setBoard(board);
 
         //make sure king cannot castle on either side
-        //assertFalse(game.validMoves(position).contains(TestFactory.getNewMove(
-        //        TestFactory.getNewPosition(8,5), TestFactory.getNewPosition(8,3), null)));
+        assertFalse(game.validMoves(position).contains(TestFactory.getNewMove(
+                TestFactory.getNewPosition(8,5), TestFactory.getNewPosition(8,3), null)));
         assertFalse(game.validMoves(position).contains(TestFactory.getNewMove(
                 TestFactory.getNewPosition(8,5), TestFactory.getNewPosition(8,7), null)));
     }

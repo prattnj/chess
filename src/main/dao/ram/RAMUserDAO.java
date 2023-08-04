@@ -9,7 +9,6 @@ import java.util.Map;
 public class RAMUserDAO implements UserDAO {
 
     private static final UserDAO instance = new RAMUserDAO();
-
     private final Map<Integer, UserBean> table = new HashMap<>();
 
     public static UserDAO getInstance() {

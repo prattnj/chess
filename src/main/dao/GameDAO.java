@@ -58,5 +58,4 @@ public interface GameDAO {
      * @throws DataAccessException
      */
     void claimSpot(int gameID, ChessGame.TeamColor color, int playerID) throws DataAccessException;
-
 }

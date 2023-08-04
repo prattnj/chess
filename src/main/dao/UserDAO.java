@@ -47,5 +47,4 @@ public interface UserDAO {
      * @throws DataAccessException
      */
     void clear() throws DataAccessException;
-
 }

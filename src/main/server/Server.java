@@ -58,6 +58,7 @@ public class Server {
             return;
         }
         try {
+            // look for and assign command line arguments
             int port = Integer.parseInt(args[0]);
 
             if (args.length > 1) {
@@ -66,6 +67,7 @@ public class Server {
             } else dbType = "ram";
             Util.CURRENT_DAO_TYPE = dbType;
 
+            // run server
             System.out.println("Server listening on port " + port + "...");
             new Server().run(port);
 

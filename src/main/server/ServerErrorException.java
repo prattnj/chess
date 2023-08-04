@@ -10,5 +10,4 @@ public class ServerErrorException extends Exception {
     public ServerErrorException() {
         super(SERVER_ERROR);
     }
-
 }
