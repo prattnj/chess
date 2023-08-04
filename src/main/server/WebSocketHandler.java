@@ -163,6 +163,12 @@ public class WebSocketHandler {
             return;
         }
 
+        // make sure the game is ongoing
+        if (Factory.getNewGame(currentBean.getGame()).isOver()) {
+            sendError("Error: the game is already over");
+            return;
+        }
+
         // make sure there is a second player
         if (!gameIsFull()) {
             sendError("Error: you can't resign without an opponent");

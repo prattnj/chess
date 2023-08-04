@@ -149,6 +149,10 @@ public class GameUI extends Client implements WSConnection.GameUI {
             printError("You can't resign as an observer.");
             return;
         }
+        if (game.isOver()) {
+            printError("You can't resign, the game is already over.");
+            return;
+        }
 
         out.print("Are you sure you want to resign? (y/n): ");
         String resign = String.valueOf(in.nextLine().charAt(0));
