@@ -14,16 +14,24 @@ public class Game implements ChessGame {
     private ChessBoard board;
     private final List<ChessMove> moveHistory = new ArrayList<>();
     private boolean isOver = false;
+    private final String SEPARATOR = ";;";
 
+    /**
+     * Creates a new game with default settings
+     */
     public Game() {
         teamTurn = TeamColor.WHITE;
         board = Factory.getNewBoard();
         board.resetBoard();
     }
 
+    /**
+     * Creates a new game from a given string representation
+     * @param str The string representation of the game to create (must be formatted like this.toString())
+     */
     public Game(String str) {
         // WARNING: Assumes that str is formatted like this.toString()
-        String[] parts = str.split(";;");
+        String[] parts = str.split(SEPARATOR);
         isOver = Boolean.parseBoolean(parts[0]);
         teamTurn = parts[1].equals("w") ? TeamColor.WHITE : TeamColor.BLACK;
         board = Factory.getNewBoard(parts[2]);
@@ -46,12 +54,13 @@ public class Game implements ChessGame {
     @Override
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
 
+        // get all moves for the piece at the given position
         ChessPiece piece = board.getPiece(startPosition);
         Collection<ChessMove> validMoves = Factory.getMoveCollection();
         if (piece == null) return validMoves;
         Collection<ChessMove> allMoves = piece.pieceMoves(board, startPosition);
 
-        // Filter out moves that put the king in danger
+        // filter out moves that put the king in danger
         for (ChessMove move : allMoves) {
             ChessBoard boardCopy = Factory.getNewBoard(board);
             boardCopy.addPiece(move.getEndPosition(), piece);
@@ -59,7 +68,7 @@ public class Game implements ChessGame {
             if (!positionIsEndangered(boardCopy, findKing(boardCopy, piece.getTeamColor()))) validMoves.add(move);
         }
 
-        // Add castling / en passant
+        // add castling / en passant
         if (piece.getPieceType() == ChessPiece.PieceType.KING) validMoves.addAll(addCastling(piece));
         if (piece.getPieceType() == ChessPiece.PieceType.PAWN) validMoves.addAll(addEnPassant(piece));
 
@@ -69,40 +78,43 @@ public class Game implements ChessGame {
     @Override
     public void makeMove(ChessMove move) throws InvalidMoveException {
 
+        // make sure game is ongoing
         if (isOver) throw new InvalidMoveException("Error: game is over");
 
+        // make sure move contains valid positions
         if (!Util.validatePosition(move.getStartPosition()) || !Util.validatePosition(move.getEndPosition())){
             throw new InvalidMoveException("Error: malformed move");
         }
 
+        // make sure move is valid
         ChessPiece mover = board.getPiece(move.getStartPosition());
         if (mover == null) throw new InvalidMoveException("Error: empty square");
         if (mover.getTeamColor() != teamTurn) throw new InvalidMoveException("Error: it is not your turn");
 
         if (!validMoves(move.getStartPosition()).contains(move)) throw new InvalidMoveException("Error: invalid move");
 
-        // At this point, move is valid and can be executed
+        // at this point, move is valid and can be executed
         board.addPiece(move.getStartPosition(), null);
         if (move.getPromotionPiece() != null) {
             board.addPiece(move.getEndPosition(), Factory.getNewPiece(move.getPromotionPiece(), mover.getTeamColor()));
         } else board.addPiece(move.getEndPosition(), mover);
 
-        // Special case for castling: also move the rook
+        // special case for castling: also move the rook
         if (mover.getPieceType() == ChessPiece.PieceType.KING) {
             int diff = move.getEndPosition().getColumn() - move.getStartPosition().getColumn();
             int row = move.getStartPosition().getRow();
             if (diff == 2) {
-                // This move is a valid right castle
+                // this move is a valid right castle
                 board.addPiece(Factory.getNewPosition(row, 6), board.getPiece(Factory.getNewPosition(row, 8)));
                 board.addPiece(Factory.getNewPosition(row, 8), null);
             } else if (diff == -2) {
-                // This move is a valid left castle
+                // this move is a valid left castle
                 board.addPiece(Factory.getNewPosition(row, 4), board.getPiece(Factory.getNewPosition(row, 1)));
                 board.addPiece(Factory.getNewPosition(row, 1), null);
             }
         }
 
-        // Special case for en passant: also remove the captured pawn
+        // special case for en passant: also remove the captured pawn
         if (mover.getPieceType() == ChessPiece.PieceType.PAWN) {
             int mod = move.getEndPosition().getColumn() - move.getStartPosition().getColumn();
             board.addPiece(Factory.getNewPosition(move.getStartPosition().getRow(), move.getStartPosition().getColumn() + mod), null);
@@ -110,11 +122,11 @@ public class Game implements ChessGame {
 
         moveHistory.add(move);
 
-        // Determine whether this move ended the game
+        // determine whether this move ended the game
         TeamColor opponent = teamTurn == TeamColor.WHITE ? TeamColor.BLACK : TeamColor.WHITE;
         if (isInCheckmate(opponent) || isInStalemate(opponent)) isOver = true;
 
-        // Update whose turn it is
+        // update whose turn it is
         toggleTurn();
     }
 
@@ -130,13 +142,13 @@ public class Game implements ChessGame {
 
     @Override
     public Boolean isInStalemate(TeamColor teamColor) {
+
+        // iterate through every square to see if this player has any valid moves
         for (int i = 1; i <= 8; i++) {
             for (int j = 1; j <= 8; j++) {
                 ChessPosition pos = Factory.getNewPosition(i, j);
                 ChessPiece resident = board.getPiece(pos);
-                if (resident != null && resident.getTeamColor() == teamColor) {
-                    if (!validMoves(pos).isEmpty()) return false;
-                }
+                if (resident != null && resident.getTeamColor() == teamColor) if (!validMoves(pos).isEmpty()) return false;
             }
         }
         return true;
@@ -281,12 +293,16 @@ public class Game implements ChessGame {
     }
 
     private boolean pieceHasMoved(ChessPiece piece) {
+
+        // scans move history to see if this piece has moved
         ChessPosition pos = findPiece(board, piece);
         for (ChessMove move : moveHistory) if (move.getEndPosition().equals(pos)) return true;
         return false;
     }
 
     private ChessPosition findPiece(ChessBoard board, ChessPiece piece) {
+
+        // iterates through board to find piece
         for (int i = 1; i <= 8; i++) {
             for (int j = 1; j <= 8; j++) {
                 ChessPosition pos = Factory.getNewPosition(i, j);
@@ -297,7 +313,8 @@ public class Game implements ChessGame {
     }
 
     private ChessPosition findKing(ChessBoard board, ChessGame.TeamColor color) {
-        // This method assumes that each team has 0-1 kings on the board
+
+        // this method assumes that each team has 0-1 kings on the board
         for (int i = 1; i <= 8; i++) {
             for (int j = 1; j <= 8; j++) {
                 ChessPosition pos = Factory.getNewPosition(i, j);
@@ -310,6 +327,7 @@ public class Game implements ChessGame {
 
     private boolean positionIsEndangered(ChessBoard board, ChessPosition endPos) {
 
+        // checks if a position is endangered by any enemy piece
         if (endPos == null) return false;
         ChessPiece victim = board.getPiece(endPos);
 
@@ -339,11 +357,11 @@ public class Game implements ChessGame {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(isOver);
-        sb.append(";;");
+        sb.append(SEPARATOR);
         sb.append(teamTurn == TeamColor.WHITE ? "w" : "b");
-        sb.append(";;");
+        sb.append(SEPARATOR);
         sb.append(board.toString());
-        sb.append(";;");
+        sb.append(SEPARATOR);
         for (ChessMove move : moveHistory) {
             sb.append(move.toString());
             sb.append(";");

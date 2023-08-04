@@ -20,6 +20,10 @@ public class Position implements ChessPosition {
         this.col = col;
     }
 
+    /**
+     * Initializes this as a deep copy of an already existing position
+     * @param str The string representation of the position to create a deep copy of (must be formatted like this.toString())
+     */
     public Position(String str) {
         // WARNING: Assumes that str is formatted like this.toString()
         col = str.charAt(0) - 'a' + 1;

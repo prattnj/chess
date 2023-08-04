@@ -75,4 +75,26 @@ public class Util {
     public static String getNewAuthToken() {
         return UUID.randomUUID().toString();
     }
+
+    /**
+     * Given a String, returns the corresponding TeamColor. Returns null if the String is not a valid color
+     * @param str The String to be converted
+     * @return The corresponding TeamColor
+     */
+    public static ChessGame.TeamColor getColorForString(String str) {
+        if (str.equalsIgnoreCase("white") || str.equalsIgnoreCase("w")) return ChessGame.TeamColor.WHITE;
+        else if (str.equalsIgnoreCase("black") || str.equalsIgnoreCase("b")) return ChessGame.TeamColor.BLACK;
+        else return null;
+    }
+
+    /**
+     * Given a TeamColor, returns the corresponding String. Returns null if the TeamColor is not valid
+     * @param color The TeamColor to be converted
+     * @return The corresponding String
+     */
+    public static String getStringForColor(ChessGame.TeamColor color) {
+        if (color == ChessGame.TeamColor.WHITE) return "white";
+        else if (color == ChessGame.TeamColor.BLACK) return "black";
+        else return null;
+    }
 }

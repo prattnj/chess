@@ -11,6 +11,12 @@ public class UserGameCommand {
     protected final String authToken;
     protected final Integer gameID;
 
+    /**
+     * Creates a new UserGameCommand
+     * @param commandType Type of command
+     * @param authToken Authentication token
+     * @param gameID ID of game to send command to
+     */
     public UserGameCommand(CommandType commandType, String authToken, Integer gameID) {
         this.commandType = commandType;
         this.authToken = authToken;

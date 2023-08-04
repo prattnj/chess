@@ -25,6 +25,10 @@ public class Board implements ChessBoard {
         for (int i = 0; i < 8; i++) for (int j = 0; j < 8; j++) this.board[i][j] = board.getPiece(Factory.getNewPosition(i + 1, j + 1));
     }
 
+    /**
+     * Initializes this as a deep copy of an already existing board
+     * @param str The string representation of the board to create a deep copy of (must be formatted like this.toString())
+     */
     public Board(String str) {
         // WARNING: Assumes that str is formatted like this.toString()
         this.board = new ChessPiece[8][8];

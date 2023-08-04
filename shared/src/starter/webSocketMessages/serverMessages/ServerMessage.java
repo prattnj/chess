@@ -12,6 +12,11 @@ public class ServerMessage {
     private String game;
     private String errorMessage;
 
+    /**
+     * Creates a new ServerMessage
+     * @param type Type of message
+     * @param message Message to send
+     */
     public ServerMessage(ServerMessageType type, String message){
         this.serverMessageType = type;
         if (type == ServerMessageType.NOTIFICATION) this.message = message;

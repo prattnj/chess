@@ -10,6 +10,7 @@ import model.response.ListGamesObj;
 import model.response.ListGamesResponse;
 import net.WSConnection;
 import util.Esc;
+import util.Util;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -112,15 +113,13 @@ public class PostLoginUI extends PreLoginUI {
         int gameID = Integer.parseInt(parts[1]);
 
         // finish building request
-        String color = prompt("Would you like to play as (b)lack or (w)hite? ");
-        if (color.equalsIgnoreCase("b")) color = "black";
-        else if (color.equalsIgnoreCase("w")) color = "white";
-        else if (!color.equalsIgnoreCase("white") && !color.equalsIgnoreCase("black")) {
+        ChessGame.TeamColor teamColor = Util.getColorForString(prompt("Would you like to play as (b)lack or (w)hite? "));
+        if (teamColor == null) {
             out.println("Invalid color.");
             return;
         }
 
-        joinOrObserve(color, gameID, true);
+        joinOrObserve(teamColor, gameID, true);
     }
 
     private void observe(String input) {
@@ -136,15 +135,15 @@ public class PostLoginUI extends PreLoginUI {
         joinOrObserve(null, gameID, false);
     }
 
-    private void joinOrObserve(String color, int gameID, boolean isJoin) {
+    private void joinOrObserve(ChessGame.TeamColor color, int gameID, boolean isJoin) {
 
         // send join request to server
-        JoinGameRequest request = new JoinGameRequest(color, gameID);
+        JoinGameRequest request = new JoinGameRequest(Util.getStringForColor(color), gameID);
         BaseResponse response = server.join(request, authToken);
         if (response.isSuccess()) {
             updateGames();
             out.println("Successfully joined game " + gameID);
-            new GameUI().start(gameID, ChessGame.TeamColor.valueOf((isJoin ? color : "white").toUpperCase()), isJoin);
+            new GameUI().start(gameID, color, isJoin);
         } else printError(response.getMessage());
     }
 

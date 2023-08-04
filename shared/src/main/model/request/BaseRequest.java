@@ -10,5 +10,4 @@ public abstract class BaseRequest {
      * @return whether this request is ready to be used
      */
     public abstract boolean isComplete();
-
 }
