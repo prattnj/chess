@@ -47,8 +47,9 @@ public class Game implements ChessGame {
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
 
         ChessPiece piece = board.getPiece(startPosition);
-        Collection<ChessMove> allMoves = piece.pieceMoves(board, startPosition);
         Collection<ChessMove> validMoves = Factory.getMoveCollection();
+        if (piece == null) return validMoves;
+        Collection<ChessMove> allMoves = piece.pieceMoves(board, startPosition);
 
         // Filter out moves that put the king in danger
         for (ChessMove move : allMoves) {

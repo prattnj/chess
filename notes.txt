@@ -1,9 +1,9 @@
 Update message in persistence test
 
 personal:
-
 make sure you can't move the other players' pieces (and add test?)
-
+single command move/show
+null pointer exception for moving empty square
 error testing
 checkmate/stalemate/check testing
 add AI

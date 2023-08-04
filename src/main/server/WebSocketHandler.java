@@ -141,6 +141,12 @@ public class WebSocketHandler {
             return;
         }
 
+        // make sure this piece belongs to this player
+        if (game.getBoard().getPiece(move.getStartPosition()).getTeamColor() != getColor()) {
+            sendError("That is not your piece");
+            return;
+        }
+
         // validate/make the move
         try {
             game.makeMove(move);
