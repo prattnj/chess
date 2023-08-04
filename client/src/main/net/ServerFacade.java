@@ -20,35 +20,76 @@ public class ServerFacade {
     private final String host;
     private final String port;
 
+    /**
+     * Creates a facade to send requests to the server
+     * @param host The IP address of the server
+     * @param port The port to connect to
+     */
     public ServerFacade(String host, String port) {
         this.host = host;
         this.port = port;
     }
 
+    /**
+     * Sends a login request to the server
+     * @param request The login request containing username and password
+     * @return The login result that contains an authToken if successful
+     */
     public BaseResponse login(BaseRequest request) {
         return execute("/session", request, null, "POST", LoginResponse.class);
     }
 
+    /**
+     * Sends a register request to the server
+     * @param request The register request containing username, password, and email
+     * @return The login result that contains an authToken if successful
+     */
     public BaseResponse register(BaseRequest request) {
         return execute("/user", request, null, "POST", LoginResponse.class);
     }
 
+    /**
+     * Sends a logout request to the server
+     * @param authToken The authToken of the user to logout
+     * @return A basic response indicating success or failure
+     */
     public BaseResponse logout(String authToken) {
         return execute("/session", null, authToken, "DELETE", BaseResponse.class);
     }
 
+    /**
+     * Sends a create game request to the server
+     * @param request The create game request containing the game name
+     * @param authToken The authToken of the user creating the game
+     * @return The creation result that contains the game ID if successful
+     */
     public BaseResponse create(BaseRequest request, String authToken) {
         return execute("/game", request, authToken, "POST", CreateGameResponse.class);
     }
 
+    /**
+     * Sends a list games request to the server
+     * @param authToken The authToken of the user requesting the list
+     * @return The list result that contains a list of games if successful
+     */
     public BaseResponse list(String authToken) {
         return execute("/game", null, authToken, "GET", ListGamesResponse.class);
     }
 
+    /**
+     * Sends a join game request to the server
+     * @param request The join game request containing the game ID
+     * @param authToken The authToken of the user joining the game
+     * @return A basic response indicating success or failure
+     */
     public BaseResponse join(BaseRequest request, String authToken) {
         return execute("/game", request, authToken, "PUT", BaseResponse.class);
     }
 
+    /**
+     * Sends a start game request to the server
+     * @return A basic response indicating success or failure
+     */
     public BaseResponse clear() {
         return execute("/db", null, null, "DELETE", BaseResponse.class);
     }
@@ -93,17 +134,17 @@ public class ServerFacade {
         }
     }
 
+    // Given an InputStream, returns a string stored therein
     private String readString(InputStream is) throws IOException {
         StringBuilder sb = new StringBuilder();
         InputStreamReader sr = new InputStreamReader(is);
         char[] buf = new char[1024];
         int len;
-        while ((len = sr.read(buf)) > 0) {
-            sb.append(buf, 0, len);
-        }
+        while ((len = sr.read(buf)) > 0) sb.append(buf, 0, len);
         return sb.toString();
     }
 
+    // Writes a given String to a given OutputStream
     private void writeString(String str, OutputStream os) throws IOException {
         OutputStreamWriter sw = new OutputStreamWriter(os);
         sw.write(str);

@@ -24,12 +24,14 @@ public class Client {
 
     public static void main(String[] args) {
 
+        // Check for host and port arguments
         if (args.length >= 2){
             host = args[0];
             port = args[1];
         }
         server = new ServerFacade(host, port);
 
+        // Connect to server
         try {
             connection = new WSConnection(new URI("ws://" + host + ":" + port + "/ws"));
             connection.connect();

@@ -67,37 +67,32 @@ public class PostLoginUI extends PreLoginUI {
     }
 
     private boolean logout() {
+        // send logout request to server
         BaseResponse response = server.logout(authToken);
         if (response.isSuccess()) {
             authToken = null;
             out.println("Logged out successfully.");
-        }
-        else {
-            out.println("Logout failed:");
-            printError(response.getMessage());
-        }
+        } else printError(response.getMessage());
         return response.isSuccess();
     }
 
     private void create(String input) {
 
+        // determine game name
         String[] parts = input.split(" ");
         if (parts.length < 2) {
             out.println("Must specify a game name.");
             return;
         }
 
+        // send create request to server and print gameID if successful
         BaseRequest request = new CreateGameRequest(parts[1]);
         BaseResponse response = server.create(request, authToken);
         if (response.isSuccess()) {
             int gameID = ((CreateGameResponse) response).getGameID();
             out.println("Game successfully created with ID " + gameID);
             updateGames();
-        }
-        else {
-            out.println("Game creation failed: ");
-            printError(response.getMessage());
-        }
+        } else printError(response.getMessage());
     }
 
     private void list() {
@@ -108,14 +103,15 @@ public class PostLoginUI extends PreLoginUI {
 
     private void join(String input) {
 
+        // determine gameID
         String[] parts = input.split(" ");
         if (parts.length < 2) {
             out.println("Must specify a game ID. Enter 'ls' to see games.");
             return;
         }
-
         int gameID = Integer.parseInt(parts[1]);
 
+        // finish building request
         String color = prompt("Would you like to play as (b)lack or (w)hite? ");
         if (color.equalsIgnoreCase("b")) color = "black";
         else if (color.equalsIgnoreCase("w")) color = "white";
@@ -128,32 +124,34 @@ public class PostLoginUI extends PreLoginUI {
     }
 
     private void observe(String input) {
+
+        // determine gameID
         String[] parts = input.split(" ");
         if (parts.length < 2) {
             out.println("Must specify a game ID. Enter 'ls' to see games.");
             return;
         }
-
         int gameID = Integer.parseInt(parts[1]);
 
         joinOrObserve(null, gameID, false);
     }
 
     private void joinOrObserve(String color, int gameID, boolean isJoin) {
+
+        // send join request to server
         JoinGameRequest request = new JoinGameRequest(color, gameID);
         BaseResponse response = server.join(request, authToken);
         if (response.isSuccess()) {
             updateGames();
             out.println("Successfully joined game " + gameID);
             new GameUI().start(gameID, ChessGame.TeamColor.valueOf((isJoin ? color : "white").toUpperCase()), isJoin);
-        }
-        else {
-            out.println("Could not join game: ");
-            printError(response.getMessage());
-        }
+        } else printError(response.getMessage());
     }
 
+    // HELPER METHODS
     private void updateGames() {
+
+        // send list games request to server
         BaseResponse listResp = server.list(authToken);
         if (listResp.isSuccess()) allGames = Arrays.asList(((ListGamesResponse) listResp).getGames());
         else {

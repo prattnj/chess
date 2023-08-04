@@ -53,11 +53,14 @@ public class PreLoginUI extends Client {
     }
 
     private boolean login() {
+
+        // build login request
         String username = prompt("Enter your username: ");
         String password = prompt("Enter your password: ");
         out.print("\n");
-
         LoginRequest request = new LoginRequest(username, password);
+
+        // send login request to server
         BaseResponse response = server.login(request);
         if (response.isSuccess()) authToken = ((LoginResponse) response).getAuthToken();
         else {
@@ -68,12 +71,15 @@ public class PreLoginUI extends Client {
     }
 
     private boolean register() {
+
+        // build register request
         String username = prompt("Enter your username: ");
         String password = prompt("Enter your password: ");
         String email = prompt("Enter your email: ");
         out.print("\n");
-
         RegisterRequest request = new RegisterRequest(username, password, email);
+
+        // send register request to server
         BaseResponse response = server.register(request);
         if (response.isSuccess()) authToken = ((LoginResponse) response).getAuthToken();
         else {
@@ -84,6 +90,8 @@ public class PreLoginUI extends Client {
     }
 
     private void clear() {
+
+        // send clear request to server
         BaseResponse response = server.clear();
         if (response.isSuccess()) out.println("Database cleared.");
         else {

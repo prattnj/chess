@@ -41,7 +41,8 @@ public class GameUI extends Client implements WSConnection.GameUI {
         while(true) {
             basePrompt();
             String input = in.nextLine().toLowerCase();
-            switch (input) {
+            String[] parts = input.split(" ");
+            switch (parts[0]) {
                 case "h", "help" -> help();
                 case "d", "draw" -> redraw();
                 case "l", "leave" -> {if (leave()) return;}
@@ -75,11 +76,14 @@ public class GameUI extends Client implements WSConnection.GameUI {
     }
 
     private void move(String input) {
+
+        // make sure game is ongoing
         if (game.isOver()) {
             out.println("The game is over. No moves can be made.");
             return;
         }
 
+        // determine the move
         String[] parts = input.split(" ");
         String startPosStr;
         String endPosStr;
@@ -127,6 +131,8 @@ public class GameUI extends Client implements WSConnection.GameUI {
     }
 
     private void show(String input) {
+
+        // determine position to show
         String[] parts = input.split(" ");
         String posStr;
         if (parts.length > 1) posStr = parts[1];
@@ -136,6 +142,8 @@ public class GameUI extends Client implements WSConnection.GameUI {
             return;
         }
         ChessPosition pos = Factory.getNewPosition(posStr);
+
+        // draw board considering end positions
         Collection<ChessMove> possibleMoves = game.validMoves(pos);
         Collection<ChessPosition> endPositions = new HashSet<>();
         for (ChessMove m : possibleMoves) endPositions.add(m.getEndPosition());
@@ -145,16 +153,19 @@ public class GameUI extends Client implements WSConnection.GameUI {
 
     private void resign() {
 
-        // Validate resignation
+        // make sure this is a player
         if (!isPlayer) {
             printError("You can't resign as an observer.");
             return;
         }
+
+        // make sure game is ongoing
         if (game.isOver()) {
             printError("You can't resign, the game is already over.");
             return;
         }
 
+        // resignation is valid
         out.print("Are you sure you want to resign? (y/n): ");
         String resign = String.valueOf(in.nextLine().charAt(0));
         if (!resign.equalsIgnoreCase("y")) {
@@ -166,6 +177,7 @@ public class GameUI extends Client implements WSConnection.GameUI {
 
     @Override
     public void setGame(ChessGame game) {
+        // Sets game, but also checks for checkmate, stalemate, and check
         this.game = game;
         drawBoard();
         ChessGame.TeamColor color = game.getTeamTurn();
@@ -185,11 +197,11 @@ public class GameUI extends Client implements WSConnection.GameUI {
     }
 
     // HELPER METHODS
-    public void drawBoard() {
+    private void drawBoard() {
         drawBoard(new HashSet<>());
     }
 
-    public void drawBoard(Collection<ChessPosition> endPositions) {
+    private void drawBoard(Collection<ChessPosition> endPositions) {
         if (game == null) return;
         out.print("\n");
         boolean isWhite = color != ChessGame.TeamColor.BLACK;
@@ -200,6 +212,7 @@ public class GameUI extends Client implements WSConnection.GameUI {
     }
 
     private void printAlphaLabel(boolean isWhite) {
+        // Prints 'a' - 'h' or vice versa depending on the color
         out.print(Esc.SET_BG_COLOR_LIGHT_GREY + Esc.SET_TEXT_COLOR_BLACK + "   ");
         if (isWhite) for (int i = 0; i < 8; i++) out.print(" " + (char)('a' + i) + "\u2003");
         else for (int i = 7; i >= 0; i--) out.print(" " + (char)('a' + i) + "\u2003");
@@ -212,14 +225,19 @@ public class GameUI extends Client implements WSConnection.GameUI {
             int rowIndex = isWhite ? 8 - i : i + 1;
             out.print(Esc.SET_BG_COLOR_LIGHT_GREY + " " + rowIndex + " ");
             for (int j = 0; j < 8; j++) {
+
+                // Determine indices
                 int index = isWhite ? ((7 - i) * 8) + j : (i * 8) + (7 - j);
                 int columnIndex = isWhite ? j + 1 : 8 - j;
                 ChessPosition position = Factory.getNewPosition(rowIndex, columnIndex);
 
+                // Set the BG color
                 if (isLight && endPositions.contains(position)) out.print(Esc.SET_BG_COLOR_GREEN);
                 else if (isLight) out.print(Esc.SET_BG_COLOR_LIGHT_SQUARE);
                 else if (endPositions.contains(position)) out.print(Esc.SET_BG_COLOR_DARK_GREEN);
                 else out.print(Esc.SET_BG_COLOR_DARK_SQUARE);
+
+                // Print the piece
                 out.print(renderPiece(board.charAt(index)));
                 isLight = !isLight;
             }
@@ -247,6 +265,7 @@ public class GameUI extends Client implements WSConnection.GameUI {
     }
 
     private boolean validatePosition(String posStr) {
+        // Determines if the given string represents a valid position
         if (posStr.length() != 2) return false;
         if (!Character.isAlphabetic(posStr.charAt(0)) || !Character.isDigit(posStr.charAt(1))) return false;
         posStr = posStr.toLowerCase();
