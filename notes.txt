@@ -1,6 +1,9 @@
 Update message in persistence test
 
 personal:
+
+make sure you can't move the other players' pieces (and add test?)
+
 error testing
 checkmate/stalemate/check testing
 add AI

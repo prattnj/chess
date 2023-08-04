@@ -123,19 +123,25 @@ public class WebSocketHandler {
         ChessMove move = command.getMove();
 
         // make sure the person is a player in the game
-        if (getColor() == null) {
-            sendError("Error: you can't make a move as an observer");
+        if (getColorString() == null) {
+            sendError("You can't make a move as an observer");
             return;
         }
 
         // make sure there is a second player
         if (!gameIsFull()) {
-            sendError("Error: wait until another player joins before making a move");
+            sendError("Wait until another player joins before making a move");
+            return;
+        }
+
+        // make sure it is this player's turn
+        ChessGame game = Factory.getNewGame(currentBean.getGame());
+        if (game.getTeamTurn() != getColor()) {
+            sendError("It is not your turn");
             return;
         }
 
         // validate/make the move
-        ChessGame game = Factory.getNewGame(currentBean.getGame());
         try {
             game.makeMove(move);
         } catch (InvalidMoveException e) {
@@ -151,13 +157,13 @@ public class WebSocketHandler {
         for (Session s : cache.get(currentGameID)) send(s, gson.toJson(new ServerMessage(LOAD_GAME, currentBean.getGame())));
 
         // send a NOTIFICATION to everyone except the root client
-        broadcast("The " + getColor() + " player made a move: " + move.getStartPosition().toString() + " -> " + move.getEndPosition().toString());
+        broadcast("The " + getColorString() + " player made a move: " + move.getStartPosition().toString() + " -> " + move.getEndPosition().toString());
     }
 
     private void resign() throws DataAccessException {
 
         // make sure the person is a player in the game
-        String color = getColor();
+        String color = getColorString();
         if (color == null) {
             sendError("Error: you can't resign as an observer");
             return;
@@ -194,7 +200,7 @@ public class WebSocketHandler {
         cache.get(currentGameID).remove(root);
 
         // if this was a player, update the game in the database
-        String color = getColor();
+        String color = getColorString();
         if (color != null) gdao.claimSpot(currentGameID, ChessGame.TeamColor.valueOf(color.toUpperCase()), 0);
 
         // send a NOTIFICATION to all remaining clients
@@ -219,9 +225,15 @@ public class WebSocketHandler {
         send(root, gson.toJson(new ServerMessage(ERROR, message)));
     }
 
-    private String getColor() {
+    private String getColorString() {
         if (currentBean.getWhitePlayerID() != null && currentBean.getWhitePlayerID() == currentUserID) return "white";
         else if (currentBean.getBlackPlayerID() != null && currentBean.getBlackPlayerID() == currentUserID) return "black";
+        else return null;
+    }
+
+    private ChessGame.TeamColor getColor() {
+        if (currentBean.getWhitePlayerID() != null && currentBean.getWhitePlayerID() == currentUserID) return ChessGame.TeamColor.WHITE;
+        else if (currentBean.getBlackPlayerID() != null && currentBean.getBlackPlayerID() == currentUserID) return ChessGame.TeamColor.BLACK;
         else return null;
     }
 

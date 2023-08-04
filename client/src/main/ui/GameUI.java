@@ -139,6 +139,7 @@ public class GameUI extends Client implements WSConnection.GameUI {
         Collection<ChessMove> possibleMoves = game.validMoves(pos);
         Collection<ChessPosition> endPositions = new HashSet<>();
         for (ChessMove m : possibleMoves) endPositions.add(m.getEndPosition());
+        endPositions.add(pos);
         drawBoard(endPositions);
     }
 
