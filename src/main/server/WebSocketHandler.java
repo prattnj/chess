@@ -138,13 +138,13 @@ public class WebSocketHandler {
         // make sure it is this player's turn
         ChessGame game = Factory.getNewGame(currentBean.getGame());
         if (game.getTeamTurn() != getColor()) {
-            sendError("It is not your turn");
+            sendError("It is not your turn.");
             return;
         }
 
         // make sure this piece belongs to this player
         if (game.getBoard().getPiece(move.getStartPosition()).getTeamColor() != getColor()) {
-            sendError("That is not your piece");
+            sendError("That is not your piece.");
             return;
         }
 
@@ -192,7 +192,7 @@ public class WebSocketHandler {
         send(root, gson.toJson(new ServerMessage(NOTIFICATION, "You have successfully resigned.")));
 
         // send a NOTIFICATION to everyone else that the root client resigned
-        broadcast("The " + color + " player has resigned");
+        broadcast("The " + color + " player has resigned.");
 
         // mark game as over
         ChessGame game = Factory.getNewGame(currentBean.getGame());
