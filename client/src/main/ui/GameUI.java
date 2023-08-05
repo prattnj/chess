@@ -77,9 +77,21 @@ public class GameUI extends Client implements WSConnection.GameUI {
 
     private void move(String input) {
 
+        // make sure this is a player
+        if (!isPlayer) {
+            printError("You can't move as an observer.");
+            return;
+        }
+
         // make sure game is ongoing
         if (game.isOver()) {
-            out.println("The game is over. No moves can be made.");
+            printError("The game is over. No moves can be made.");
+            return;
+        }
+
+        // make sure it is this player's turn
+        if (game.getTeamTurn() != color) {
+            printError("It is not your turn.");
             return;
         }
 
@@ -123,6 +135,12 @@ public class GameUI extends Client implements WSConnection.GameUI {
         ChessMove move = Factory.getNewMove(start, end, promo);
         if (!validMoves.contains(move)) {
             printError("Invalid move.");
+            return;
+        }
+
+        // make sure this piece belongs to this player
+        if (game.getBoard().getPiece(move.getStartPosition()).getTeamColor() != color) {
+            printError("That is not your piece.");
             return;
         }
 

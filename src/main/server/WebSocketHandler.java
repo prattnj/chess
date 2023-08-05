@@ -47,13 +47,13 @@ public class WebSocketHandler {
             // validate command
             UserGameCommand command = gson.fromJson(message, UserGameCommand.class);
             if (command == null) {
-                sendError("Error: invalid command");
+                sendError("Invalid command.");
                 return;
             }
 
             // validate authToken
             if (adao.find(command.getAuthString()) == null) {
-                sendError("Error: invalid authToken");
+                sendError("Invalid authToken.");
                 return;
             }
             currentUserID = adao.find(command.getAuthString()).getUserID();
@@ -61,7 +61,7 @@ public class WebSocketHandler {
             // double check gameID
             currentBean = gdao.find(command.getGameID());
             if (currentBean == null) {
-                sendError("Error: invalid gameID");
+                sendError("Invalid gameID.");
                 return;
             }
 
@@ -103,7 +103,7 @@ public class WebSocketHandler {
         if (color != null) {
             Integer takenID = color == ChessGame.TeamColor.WHITE ? currentBean.getWhitePlayerID() : currentBean.getBlackPlayerID();
             if (takenID != null && takenID != currentUserID && takenID != 0) {
-                sendError("Error: color is already taken");
+                sendError("Color is already taken.");
                 return;
             }
         }
@@ -125,13 +125,13 @@ public class WebSocketHandler {
 
         // make sure the person is a player in the game
         if (getColorString() == null) {
-            sendError("You can't make a move as an observer");
+            sendError("You can't make a move as an observer.");
             return;
         }
 
         // make sure there is a second player
         if (!gameIsFull()) {
-            sendError("Wait until another player joins before making a move");
+            sendError("Wait until another player joins before making a move.");
             return;
         }
 
@@ -172,19 +172,19 @@ public class WebSocketHandler {
         // make sure the person is a player in the game
         String color = getColorString();
         if (color == null) {
-            sendError("Error: you can't resign as an observer");
+            sendError("You can't resign as an observer.");
             return;
         }
 
         // make sure the game is ongoing
         if (Factory.getNewGame(currentBean.getGame()).isOver()) {
-            sendError("Error: the game is already over");
+            sendError("The game is already over.");
             return;
         }
 
         // make sure there is a second player
         if (!gameIsFull()) {
-            sendError("Error: you can't resign without an opponent");
+            sendError("You can't resign without an opponent.");
             return;
         }
 
@@ -212,7 +212,7 @@ public class WebSocketHandler {
 
         // send a NOTIFICATION to all remaining clients
         String username = udao.find(currentUserID).getUsername();
-        broadcast(color == null ? username + " left the game" : username + " (the " + color + " player) left the game");
+        broadcast(color == null ? username + " left the game." : username + " (the " + color + " player) left the game.");
     }
 
     // HELPER METHODS
