@@ -47,7 +47,8 @@ public class WebSocketTests {
 
     @BeforeAll
     static void init(){
-        serverFacade = new TestServerFacade(TestFactory.getServerHost(), TestFactory.getServerPort());
+        serverFacade = new TestServerFacade(TestFactory.getServerHost(), TestFactory
+                .getServerPort());
         serverFacade.clear();
 
         bobClient = new TestClient();
