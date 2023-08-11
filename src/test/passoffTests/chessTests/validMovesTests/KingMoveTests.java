@@ -56,8 +56,8 @@ public class KingMoveTests {
         moves.add(getNewMove(position, getNewPosition(2,7), null));
 
         game.setBoard(board);
-
-        assertEquals(moves, game.validMoves(position));
+        Set<ChessMove> gameMoves = new HashSet<>(game.validMoves(position));
+        assertEquals(moves, gameMoves);
     }
 
     @Test
@@ -101,7 +101,8 @@ public class KingMoveTests {
         moves.add(getNewMove(position, getNewPosition(4,4), null));
 
         game.setBoard(board);
-        assertEquals(moves, game.validMoves(position));
+        Set<ChessMove> gameMoves = new HashSet<>(game.validMoves(position));
+        assertEquals(moves, gameMoves);
     }
 
     @Test
@@ -134,7 +135,8 @@ public class KingMoveTests {
 
         game.setBoard(board);
 
-        assertEquals(moves, game.validMoves(position));
+        Set<ChessMove> gameMoves = new HashSet<>(game.validMoves(position));
+        assertEquals(moves, gameMoves);
     }
 
     @Test
@@ -161,7 +163,8 @@ public class KingMoveTests {
         moves.add(getNewMove(position, getNewPosition(7,8), null));
 
         game.setBoard(board);
-        assertEquals(moves, game.validMoves(position));
+        Set<ChessMove> gameMoves = new HashSet<>(game.validMoves(position));
+        assertEquals(moves, gameMoves);
     }
 
 }

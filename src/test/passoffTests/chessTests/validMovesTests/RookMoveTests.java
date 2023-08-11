@@ -69,7 +69,8 @@ public class RookMoveTests {
 
         //check
         game.setBoard(board);
-        assertEquals(moves, game.validMoves(rookPosition));
+        Set<ChessMove> gameMoves = new HashSet<>(game.validMoves(rookPosition));
+        assertEquals(moves, gameMoves);
     }
 
     @Test
@@ -112,7 +113,8 @@ public class RookMoveTests {
 
         //check
         game.setBoard(board);
-        assertEquals(moves, game.validMoves(rookPosition));
+        Set<ChessMove> gameMoves = new HashSet<>(game.validMoves(rookPosition));
+        assertEquals(moves, gameMoves);
     }
 
     @Test
@@ -146,6 +148,7 @@ public class RookMoveTests {
 
         //check
         game.setBoard(board);
-        assertEquals(moves, game.validMoves(rookPosition));
+        Set<ChessMove> gameMoves = new HashSet<>(game.validMoves(rookPosition));
+        assertEquals(moves, gameMoves);
     }
 }

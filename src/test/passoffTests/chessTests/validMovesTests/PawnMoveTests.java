@@ -59,7 +59,8 @@ public class PawnMoveTests {
         ChessPiece pawn = getNewPiece(WHITE, PAWN);
         chessBoard.addPiece(d4Position, pawn);
 
-        assertEquals(validMovesFromD4White, pawn.pieceMoves(chessBoard, d4Position));
+        Set<ChessMove> pawnMoves = new HashSet<>(pawn.pieceMoves(chessBoard, d4Position));
+        assertEquals(validMovesFromD4White, pawnMoves);
     }
 
     @Test
@@ -79,7 +80,8 @@ public class PawnMoveTests {
         ChessPiece pawn = getNewPiece(BLACK, PAWN);
         chessBoard.addPiece(d4Position, pawn);
 
-        assertEquals(validMovesFromD4Black, pawn.pieceMoves(chessBoard, d4Position));
+        Set<ChessMove> pawnMoves = new HashSet<>(pawn.pieceMoves(chessBoard, d4Position));
+        assertEquals(validMovesFromD4Black, pawnMoves);
     }
 
     //A pawn's first move (from the starting position) they can move 2 spaces instead of just 1
@@ -159,7 +161,8 @@ public class PawnMoveTests {
         ChessPiece pawn = getNewPiece(WHITE, PAWN);
         chessBoard.addPiece(start, pawn);
         chessGame.setBoard(chessBoard);
-        assertEquals(validMoves, chessGame.validMoves(start));
+        Set<ChessMove> gameMoves = new HashSet<>(chessGame.validMoves(start));
+        assertEquals(validMoves, gameMoves);
     }
 
     @Test
@@ -190,7 +193,8 @@ public class PawnMoveTests {
         ChessPiece pawn = getNewPiece(BLACK, PAWN);
         chessBoard.addPiece(start, pawn);
         chessGame.setBoard(chessBoard);
-        assertEquals(validMoves, chessGame.validMoves(start));
+        Set<ChessMove> gameMoves = new HashSet<>(chessGame.validMoves(start));
+        assertEquals(validMoves, gameMoves);
     }
 
     @Test
@@ -273,7 +277,8 @@ public class PawnMoveTests {
         //test white
         Set<ChessMove> whiteMoves = new HashSet<>();
         whiteMoves.add(getNewMove(whitePosition, getNewPosition(3,7), null));
-        assertEquals(whiteMoves, chessGame.validMoves(whitePosition));
+        Set<ChessMove> gameMoves = new HashSet<>(chessGame.validMoves(whitePosition));
+        assertEquals(whiteMoves, gameMoves);
 
         //test black
         assertTrue(chessGame.validMoves(blackPosition).isEmpty());
@@ -307,7 +312,8 @@ public class PawnMoveTests {
 
         //check
         chessGame.setBoard(chessBoard);
-        assertEquals(validMovesFromD4White, chessGame.validMoves(d4Position));
+        Set<ChessMove> gameMoves = new HashSet<>(chessGame.validMoves(d4Position));
+        assertEquals(validMovesFromD4White, gameMoves);
     }
 
     @Test
@@ -339,6 +345,7 @@ public class PawnMoveTests {
 
         //check
         chessGame.setBoard(chessBoard);
-        assertEquals(moves, chessGame.validMoves(d4Position));
+        Set<ChessMove> gameMoves = new HashSet<>(chessGame.validMoves(d4Position));
+        assertEquals(moves, gameMoves);
     }
 }

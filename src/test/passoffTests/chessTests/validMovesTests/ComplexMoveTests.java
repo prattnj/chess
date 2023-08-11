@@ -72,7 +72,8 @@ public class ComplexMoveTests {
         validMoves.add(getNewMove(edge, getNewPosition(1,2), QUEEN));
 
         game.setBoard(chessBoard);
-        assertEquals(validMoves, game.validMoves(edge));
+        Set<ChessMove> gameMoves = new HashSet<>(game.validMoves(edge));
+        assertEquals(validMoves, gameMoves);
     }
 
     @Test
@@ -106,7 +107,8 @@ public class ComplexMoveTests {
         validMoves.add(getNewMove(knightPosition, getNewPosition(6,2), null)); //capture bishop
 
         game.setBoard(chessBoard);
-        assertEquals(validMoves, game.validMoves(knightPosition));
+        Set<ChessMove> gameMoves = new HashSet<>(game.validMoves(knightPosition));
+        assertEquals(validMoves, gameMoves);
     }
 
     @Test
@@ -217,7 +219,8 @@ public class ComplexMoveTests {
         validMoves.add(getNewMove(position, getNewPosition(3,2), null));
 
         game.setBoard(chessBoard);
-        assertEquals(validMoves, game.validMoves(position));
+        Set<ChessMove> gameMoves = new HashSet<>(game.validMoves(position));
+        assertEquals(validMoves, gameMoves);
     }
 
     @Test
@@ -278,7 +281,8 @@ public class ComplexMoveTests {
 
         //check king moves
         game.setBoard(chessBoard);
-        assertEquals(kingMoves, game.validMoves(kingPosition));
+        Set<ChessMove> gameMoves = new HashSet<>(game.validMoves(kingPosition));
+        assertEquals(kingMoves, gameMoves);
 
         //make sure teams other pieces are not allowed to move
         assertEquals(0, game.validMoves(pawnPosition).size());

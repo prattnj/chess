@@ -86,7 +86,8 @@ public class QueenMoveTests {
 
         //check
         game.setBoard(board);
-        assertEquals(moves, game.validMoves(position));
+        Set<ChessMove> gameMoves = new HashSet<>(game.validMoves(position));
+        assertEquals(moves, gameMoves);
     }
 
     @Test
@@ -141,7 +142,8 @@ public class QueenMoveTests {
 
         //check
         game.setBoard(board);
-        assertEquals(moves, game.validMoves(position));
+        Set<ChessMove> gameMoves = new HashSet<>(game.validMoves(position));
+        assertEquals(moves, gameMoves);
     }
 
     @Test
@@ -171,6 +173,7 @@ public class QueenMoveTests {
 
         //check
         game.setBoard(board);
-        assertEquals(moves, game.validMoves(position));
+        Set<ChessMove> gameMoves = new HashSet<>(game.validMoves(position));
+        assertEquals(moves, gameMoves);
     }
 }

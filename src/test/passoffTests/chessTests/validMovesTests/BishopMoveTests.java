@@ -67,7 +67,8 @@ public class BishopMoveTests {
 
         //check
         game.setBoard(board);
-        assertEquals(validMoves, game.validMoves(position));
+        Set<ChessMove> gameMoves = new HashSet<>(game.validMoves(position));
+        assertEquals(validMoves, gameMoves);
     }
 
     @Test
@@ -112,6 +113,7 @@ public class BishopMoveTests {
 
         //check
         game.setBoard(board);
-        assertEquals(validMoves, game.validMoves(position));
+        Set<ChessMove> gameMoves = new HashSet<>(game.validMoves(position));
+        assertEquals(validMoves, gameMoves);
     }
 }

@@ -51,7 +51,8 @@ public class KnightMoveTests {
         ChessPiece knight = getNewPiece(WHITE, KNIGHT);
         board.addPiece(midBoard, knight);
         game.setBoard(board);
-        assertEquals(baseMoves, game.validMoves(midBoard));
+        Set<ChessMove> gameMoves = new HashSet<>(game.validMoves(midBoard));
+        assertEquals(baseMoves, gameMoves);
 
         //black
         /*
@@ -67,7 +68,8 @@ public class KnightMoveTests {
         knight = getNewPiece(BLACK, KNIGHT);
         board.addPiece(midBoard, knight);
         game.setBoard(board);
-        assertEquals(baseMoves, game.validMoves(midBoard));
+        gameMoves = new HashSet<>(game.validMoves(midBoard));
+        assertEquals(baseMoves, gameMoves);
     }
 
     @Test
@@ -95,7 +97,8 @@ public class KnightMoveTests {
         moves.add(getNewMove(edge, getNewPosition(5,3), null));
 
         game.setBoard(board);
-        assertEquals(moves, game.validMoves(edge));
+        Set<ChessMove> gameMoves = new HashSet<>(game.validMoves(edge));
+        assertEquals(moves, gameMoves);
 
 
         //right
@@ -122,7 +125,8 @@ public class KnightMoveTests {
         moves.add(getNewMove(edge, getNewPosition(4,6), null));
 
         game.setBoard(board);
-        assertEquals(moves, game.validMoves(edge));
+        gameMoves = new HashSet<>(game.validMoves(edge));
+        assertEquals(moves, gameMoves);
 
 
         //bottom
@@ -149,7 +153,8 @@ public class KnightMoveTests {
         moves.add(getNewMove(edge, getNewPosition(3,7), null));
 
         game.setBoard(board);
-        assertEquals(moves, game.validMoves(edge));
+        gameMoves = new HashSet<>(game.validMoves(edge));
+        assertEquals(moves, gameMoves);
 
 
         //top
@@ -176,7 +181,8 @@ public class KnightMoveTests {
         moves.add(getNewMove(edge, getNewPosition(6,2), null));
 
         game.setBoard(board);
-        assertEquals(moves, game.validMoves(edge));
+        gameMoves = new HashSet<>(game.validMoves(edge));
+        assertEquals(moves, gameMoves);
     }
 
     @Test
@@ -202,7 +208,8 @@ public class KnightMoveTests {
         moves.add(getNewMove(edge, getNewPosition(3,7), null));
 
         game.setBoard(board);
-        assertEquals(moves, game.validMoves(edge));
+        Set<ChessMove> gameMoves = new HashSet<>(game.validMoves(edge));
+        assertEquals(moves, gameMoves);
 
 
         //top right
@@ -227,7 +234,8 @@ public class KnightMoveTests {
         moves.add(getNewMove(edge, getNewPosition(6,7), null));
 
         game.setBoard(board);
-        assertEquals(moves, game.validMoves(edge));
+        gameMoves = new HashSet<>(game.validMoves(edge));
+        assertEquals(moves, gameMoves);
 
 
         //top left
@@ -252,7 +260,8 @@ public class KnightMoveTests {
         moves.add(getNewMove(edge, getNewPosition(6,2), null));
 
         game.setBoard(board);
-        assertEquals(moves, game.validMoves(edge));
+        gameMoves = new HashSet<>(game.validMoves(edge));
+        assertEquals(moves, gameMoves);
 
 
         //bottom left
@@ -277,7 +286,8 @@ public class KnightMoveTests {
         moves.add(getNewMove(edge, getNewPosition(3,2), null));
 
         game.setBoard(board);
-        assertEquals(moves, game.validMoves(edge));
+        gameMoves = new HashSet<>(game.validMoves(edge));
+        assertEquals(moves, gameMoves);
     }
 
     @Test
@@ -309,7 +319,8 @@ public class KnightMoveTests {
         baseMoves.remove(getNewMove(midBoard, getNewPosition(4,3), null));
 
         game.setBoard(board);
-        assertEquals(baseMoves, game.validMoves(midBoard));
+        Set<ChessMove> gameMoves = new HashSet<>(game.validMoves(midBoard));
+        assertEquals(baseMoves, gameMoves);
     }
 
     @Test
@@ -338,7 +349,8 @@ public class KnightMoveTests {
 
         //make sure enemy pieces didn't stop any moves
         game.setBoard(board);
-        assertEquals(baseMoves, game.validMoves(midBoard));
+        Set<ChessMove> gameMoves = new HashSet<>(game.validMoves(midBoard));
+        assertEquals(baseMoves, gameMoves);
     }
 
     @Test
@@ -378,6 +390,7 @@ public class KnightMoveTests {
         board.addPiece(getNewPosition(5,6), getNewPiece(BLACK, ROOK));
 
         game.setBoard(board);
-        assertEquals(baseMoves, game.validMoves(midBoard));
+        Set<ChessMove> gameMoves = new HashSet<>(game.validMoves(midBoard));
+        assertEquals(baseMoves, gameMoves);
     }
 }
