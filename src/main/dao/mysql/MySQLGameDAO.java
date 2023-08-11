@@ -22,6 +22,7 @@ public class MySQLGameDAO implements GameDAO {
     public void insert(GameBean bean) throws DataAccessException {
         String sql = "INSERT INTO game (gameID, whitePlayerID, blackPlayerID, gameName, game) VALUES (?, ?, ?, ?, ?);";
         try {
+            if (conn.isClosed()) return;
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, bean.getGameID());
             if (bean.getWhitePlayerID() == null) stmt.setNull(2, Types.INTEGER);
@@ -41,6 +42,7 @@ public class MySQLGameDAO implements GameDAO {
     public GameBean find(int gameID) throws DataAccessException {
         String sql = "SELECT * FROM game WHERE gameID = ?;";
         try {
+            if (conn.isClosed()) return null;
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, gameID);
             ResultSet rs = stmt.executeQuery();
@@ -62,6 +64,7 @@ public class MySQLGameDAO implements GameDAO {
     public Collection<GameBean> findAll() throws DataAccessException {
         String sql = "SELECT * FROM game ORDER BY gameName;";
         try {
+            if (conn.isClosed()) return null;
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             Set<GameBean> allGames = new HashSet<>();
@@ -83,6 +86,7 @@ public class MySQLGameDAO implements GameDAO {
     public void update(GameBean bean) throws DataAccessException {
         String sql = "UPDATE game SET game = ? WHERE gameID = ?";
         try {
+            if (conn.isClosed()) return;
             // If this game does not exist, insert it
             if (find(bean.getGameID()) == null) {
                 insert(bean);
@@ -102,6 +106,7 @@ public class MySQLGameDAO implements GameDAO {
     public void delete(int gameID) throws DataAccessException {
         String sql = "DELETE FROM game WHERE gameID = ?;";
         try {
+            if (conn.isClosed()) return;
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, gameID);
             stmt.executeUpdate();
@@ -115,6 +120,7 @@ public class MySQLGameDAO implements GameDAO {
     public void clear() throws DataAccessException {
         String sql = "DELETE FROM game;";
         try {
+            if (conn.isClosed()) return;
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -130,6 +136,7 @@ public class MySQLGameDAO implements GameDAO {
                 "UPDATE game SET whitePlayerID = ? WHERE gameID = ?" :
                 "UPDATE game SET blackPlayerID = ? WHERE gameID = ?";
         try {
+            if (conn.isClosed()) return;
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, playerID);
             stmt.setInt(2, gameID);

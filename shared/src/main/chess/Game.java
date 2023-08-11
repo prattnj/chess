@@ -156,6 +156,7 @@ public class Game implements ChessGame {
 
     @Override
     public void setBoard(ChessBoard board) {
+        this.isOver = false;
         this.board = board;
     }
 

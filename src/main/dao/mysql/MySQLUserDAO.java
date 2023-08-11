@@ -21,6 +21,7 @@ public class MySQLUserDAO implements UserDAO {
     public void insert(UserBean bean) throws DataAccessException {
         String sql = "INSERT INTO user (userID, username, password, email) VALUES (?, ?, ?, ?);";
         try {
+            if (conn.isClosed()) return;
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, bean.getUserID());
             stmt.setString(2, bean.getUsername());
@@ -37,6 +38,7 @@ public class MySQLUserDAO implements UserDAO {
     public UserBean find(int userID) throws DataAccessException {
         String sql = "SELECT * FROM user WHERE userID = ?;";
         try {
+            if (conn.isClosed()) return null;
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, userID);
             ResultSet rs = stmt.executeQuery();
@@ -52,6 +54,7 @@ public class MySQLUserDAO implements UserDAO {
     public UserBean find(String username) throws DataAccessException {
         String sql = "SELECT * FROM user WHERE username = ?;";
         try {
+            if (conn.isClosed()) return null;
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
@@ -72,6 +75,7 @@ public class MySQLUserDAO implements UserDAO {
     public void delete(int userID) throws DataAccessException {
         String sql = "DELETE FROM user WHERE userID = ?";
         try {
+            if (conn.isClosed()) return;
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, userID);
             stmt.executeUpdate();
@@ -85,6 +89,7 @@ public class MySQLUserDAO implements UserDAO {
     public void clear() throws DataAccessException {
         String sql = "DELETE FROM user;";
         try {
+            if (conn.isClosed()) return;
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.executeUpdate();
         } catch (SQLException e) {

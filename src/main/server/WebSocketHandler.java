@@ -102,8 +102,9 @@ public class WebSocketHandler {
         // make sure this slot isn't already taken (for joins rather than observes)
         if (color != null) {
             Integer takenID = color == ChessGame.TeamColor.WHITE ? currentBean.getWhitePlayerID() : currentBean.getBlackPlayerID();
-            if (takenID != null && takenID != currentUserID && takenID != 0) {
-                sendError("Color is already taken.");
+            if (takenID == null) takenID = 0;
+            if (takenID != currentUserID) {
+                sendError("You must use the API to join this game.");
                 return;
             }
         }

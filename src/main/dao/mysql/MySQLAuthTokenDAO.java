@@ -21,6 +21,7 @@ public class MySQLAuthTokenDAO implements AuthTokenDAO {
     public void insert(AuthTokenBean bean) throws DataAccessException {
         String sql = "INSERT INTO auth (authtoken, userID) VALUES (?, ?);";
         try {
+            if (conn.isClosed()) return;
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, bean.getAuthToken());
             stmt.setInt(2, bean.getUserID());
@@ -35,6 +36,7 @@ public class MySQLAuthTokenDAO implements AuthTokenDAO {
     public AuthTokenBean find(int userID) throws DataAccessException {
         String sql = "SELECT * FROM auth WHERE userID = ?;";
         try {
+            if (conn.isClosed()) return null;
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, userID);
             ResultSet rs = stmt.executeQuery();
@@ -50,6 +52,7 @@ public class MySQLAuthTokenDAO implements AuthTokenDAO {
     public AuthTokenBean find(String authToken) throws DataAccessException {
         String sql = "SELECT * FROM auth WHERE authtoken = ?;";
         try {
+            if (conn.isClosed()) return null;
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, authToken);
             ResultSet rs = stmt.executeQuery();
@@ -65,6 +68,7 @@ public class MySQLAuthTokenDAO implements AuthTokenDAO {
     public void update(AuthTokenBean bean) throws DataAccessException {
         String sql = "UPDATE auth SET authToken = ? WHERE userID = ?";
         try {
+            if (conn.isClosed()) return;
             // If this authToken does not exist, insert it
             if (find(bean.getUserID()) == null) {
                 insert(bean);
@@ -84,6 +88,7 @@ public class MySQLAuthTokenDAO implements AuthTokenDAO {
     public void delete(String authToken) throws DataAccessException {
         String sql = "DELETE FROM auth WHERE authtoken = ?;";
         try {
+            if (conn.isClosed()) return;
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, authToken);
             stmt.executeUpdate();
@@ -97,6 +102,7 @@ public class MySQLAuthTokenDAO implements AuthTokenDAO {
     public void clear() throws DataAccessException {
         String sql = "DELETE FROM auth;";
         try {
+            if (conn.isClosed()) return;
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.executeUpdate();
         } catch (SQLException e) {

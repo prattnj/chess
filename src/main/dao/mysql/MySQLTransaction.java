@@ -24,6 +24,7 @@ public class MySQLTransaction implements Transaction {
     @Override
     public boolean isOpen() throws DataAccessException {
         try {
+            if (db.getConnection() == null) return false;
             return !db.getConnection().isClosed();
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
