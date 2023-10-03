@@ -9,27 +9,10 @@ import java.util.Collection;
 /**
  * Rook implementation of the ChessPiece interface
  */
-public class Rook implements ChessPiece {
+public class Rook extends Piece {
 
-    private final ChessGame.TeamColor color;
-    private final PieceType type = PieceType.ROOK;
-
-    /**
-     * Basic constructor
-     * @param color This rook's team color
-     */
     public Rook(ChessGame.TeamColor color) {
-        this.color = color;
-    }
-
-    @Override
-    public ChessGame.TeamColor getTeamColor() {
-        return color;
-    }
-
-    @Override
-    public PieceType getPieceType() {
-        return type;
+        super(color, PieceType.ROOK);
     }
 
     @Override

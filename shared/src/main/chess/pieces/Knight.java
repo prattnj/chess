@@ -9,27 +9,10 @@ import java.util.Collection;
 /**
  * Knight implementation of the ChessPiece interface
  */
-public class Knight implements ChessPiece {
+public class Knight extends Piece {
 
-    private final ChessGame.TeamColor color;
-    private final PieceType type = PieceType.KNIGHT;
-
-    /**
-     * Basic constructor
-     * @param color This knight's team color
-     */
     public Knight(ChessGame.TeamColor color) {
-        this.color = color;
-    }
-
-    @Override
-    public ChessGame.TeamColor getTeamColor() {
-        return color;
-    }
-
-    @Override
-    public PieceType getPieceType() {
-        return type;
+        super(color, PieceType.KNIGHT);
     }
 
     @Override

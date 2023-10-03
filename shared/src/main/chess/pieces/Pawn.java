@@ -10,27 +10,10 @@ import java.util.HashSet;
 /**
  * Pawn implementation of the ChessPiece interface
  */
-public class Pawn implements ChessPiece {
+public class Pawn extends Piece {
 
-    private final ChessGame.TeamColor color;
-    private final PieceType type = PieceType.PAWN;
-
-    /**
-     * Basic constructor
-     * @param color This pawn's team color
-     */
     public Pawn(ChessGame.TeamColor color) {
-        this.color = color;
-    }
-
-    @Override
-    public ChessGame.TeamColor getTeamColor() {
-        return color;
-    }
-
-    @Override
-    public PieceType getPieceType() {
-        return type;
+        super(color, PieceType.PAWN);
     }
 
     @Override

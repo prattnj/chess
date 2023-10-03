@@ -9,27 +9,10 @@ import java.util.Collection;
 /**
  * King implementation of the ChessPiece interface
  */
-public class King implements ChessPiece {
+public class King extends Piece {
 
-    private final ChessGame.TeamColor color;
-    private final PieceType type = PieceType.KING;
-
-    /**
-     * Basic constructor
-     * @param color This king's team color
-     */
     public King(ChessGame.TeamColor color) {
-        this.color = color;
-    }
-
-    @Override
-    public ChessGame.TeamColor getTeamColor() {
-        return color;
-    }
-
-    @Override
-    public PieceType getPieceType() {
-        return type;
+        super(color, PieceType.KING);
     }
 
     @Override

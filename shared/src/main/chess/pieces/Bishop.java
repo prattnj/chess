@@ -9,27 +9,10 @@ import java.util.Collection;
 /**
  * Bishop implementation of the ChessPiece interface
  */
-public class Bishop implements ChessPiece {
+public class Bishop extends Piece {
 
-    private final ChessGame.TeamColor color;
-    private final PieceType type = PieceType.BISHOP;
-
-    /**
-     * Basic constructor
-     * @param color This bishop's team color
-     */
     public Bishop(ChessGame.TeamColor color) {
-        this.color = color;
-    }
-
-    @Override
-    public ChessGame.TeamColor getTeamColor() {
-        return color;
-    }
-
-    @Override
-    public PieceType getPieceType() {
-        return type;
+        super(color, PieceType.BISHOP);
     }
 
     @Override

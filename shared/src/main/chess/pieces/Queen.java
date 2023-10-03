@@ -8,27 +8,10 @@ import java.util.Collection;
 /**
  * Queen implementation of the ChessPiece interface
  */
-public class Queen implements ChessPiece {
+public class Queen extends Piece {
 
-    private final ChessGame.TeamColor color;
-    private final PieceType type = PieceType.QUEEN;
-
-    /**
-     * Basic constructor
-     * @param color This queen's team color
-     */
     public Queen(ChessGame.TeamColor color) {
-        this.color = color;
-    }
-
-    @Override
-    public ChessGame.TeamColor getTeamColor() {
-        return color;
-    }
-
-    @Override
-    public PieceType getPieceType() {
-        return type;
+        super(color, PieceType.QUEEN);
     }
 
     @Override
