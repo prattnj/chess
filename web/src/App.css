@@ -1,0 +1,13 @@
+.login-all {
+  display: flex;
+  flex-direction: column;
+  margin: 3rem auto;
+}
+
+.login-buttons {
+  display: flex;
+  flex-direction: row;
+  padding: 2rem;
+  justify-content: center;
+  align-items: center;
+}
