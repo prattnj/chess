@@ -32,6 +32,12 @@ public class RAMUserDAO implements UserDAO {
     }
 
     @Override
+    public boolean emailExists(String email) {
+        for (UserBean bean : table.values()) if (bean.getEmail().equals(email)) return true;
+        return false;
+    }
+
+    @Override
     public void update(UserBean bean) {
         insert(bean);
     }

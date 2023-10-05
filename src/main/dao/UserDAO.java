@@ -28,6 +28,8 @@ public interface UserDAO {
      */
     UserBean find(String username) throws DataAccessException;
 
+    boolean emailExists(String email) throws DataAccessException;
+
     /**
      * Updates a given user in the database
      * @param bean The user to update
