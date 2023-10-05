@@ -1,0 +1,56 @@
+.error-message {
+    color: #e24646;
+    height: 1rem;
+    padding-top: .3rem;
+}
+
+.login-all {
+    display: flex;
+    flex-direction: column;
+    margin: 3rem auto;
+    align-items: center;
+    color: #cce2e6;
+}
+
+.login-button {
+    display: flex;
+    padding: .5rem;
+    margin: .5rem;
+    border-radius: .2rem;
+    width: 5rem;
+    justify-content: center;
+    color: #1a1e1f;
+}
+
+.login-button-disabled {
+    background: gray;
+    cursor: not-allowed;
+}
+
+.login-button-enabled {
+    background: #3de2ff;
+    cursor: pointer;
+}
+
+.login-button-enabled:hover {
+    background: dodgerblue;
+}
+
+.login-buttons {
+    display: flex;
+    flex-direction: row;
+    padding: .7rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-input {
+    width: 15rem;
+    margin-top: .8rem;
+    padding: .2rem;
+    background: #1a1e1f;
+    color: #cce2e6;
+    border: #cce2e6 .02rem solid;
+    border-radius: .4rem;
+    font-size: 1.5rem;
+}
