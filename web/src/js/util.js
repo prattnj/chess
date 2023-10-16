@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import './util.css'
+import '../css/util.css'
 
 export function LoginScreen() {
 
@@ -35,13 +35,7 @@ export function LoginScreen() {
                 password: passwordText,
             })
         }).then(r => r.json()).then(data => {
-            if (!data.success) {
-                setErrorMessage(data.message)
-            } else {
-                console.log(data)
-                localStorage.setItem('token', data.authToken)
-                window.location.reload()
-            }
+            cacheLoginData(data)
         })
     }
 
@@ -58,14 +52,20 @@ export function LoginScreen() {
                 email: emailText,
             })
         }).then(r => r.json()).then(data => {
-            if (!data.success) {
-                setErrorMessage(data.message)
-            } else {
-                console.log(data)
-                localStorage.setItem('token', data.authToken)
-                window.location.reload()
-            }
+            cacheLoginData(data)
         })
+    }
+
+    function cacheLoginData(data) {
+        if (!data.success) {
+            setErrorMessage(data.message)
+            localStorage.clear()
+        } else {
+            console.log(data)
+            localStorage.setItem('token', data.authToken)
+            localStorage.setItem('username', data.username)
+            window.location.reload()
+        }
     }
 
     return (

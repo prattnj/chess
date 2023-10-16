@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {BrowserRouter, Route, Routes} from "react-router-dom"
-import './index.css';
-import {MainMenu} from "./menu";
-import {Play} from "./play";
-import {Watch} from "./watch";
+import './css/index.css';
+import {MainMenu} from "./js/menu";
+import {Play} from "./js/play";
+import {Watch} from "./js/watch";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
