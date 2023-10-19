@@ -1,10 +1,12 @@
 package service;
 
+import chess.ChessGame;
 import model.bean.GameBean;
 import model.request.BaseRequest;
 import model.response.BaseResponse;
 import model.response.ListGamesObj;
 import model.response.ListGamesResponse;
+import util.Factory;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -26,7 +28,8 @@ public class ListGamesService extends Service {
             String blackUsername = null;
             if (game.getWhitePlayerID() != null) whiteUsername = udao.find(game.getWhitePlayerID()).getUsername();
             if (game.getBlackPlayerID() != null) blackUsername = udao.find(game.getBlackPlayerID()).getUsername();
-            parsedGames.add(new ListGamesObj(game.getGameID(), whiteUsername, blackUsername, game.getGameName()));
+            ChessGame gameObj = Factory.getNewGame(game.getGame());
+            parsedGames.add(new ListGamesObj(game.getGameID(), whiteUsername, blackUsername, game.getGameName(), gameObj.isOver()));
         }
 
         return new ListGamesResponse(parsedGames);
