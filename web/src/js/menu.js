@@ -87,7 +87,6 @@ export function MainMenu() {
         else setDisplayedData(joinableGames)
         setSelectedTab('joinable')
     }
-
     function setToObservable() {
         setJoinableStyle('tab-unselected')
         setObservableStyle('tab-selected')
@@ -96,7 +95,6 @@ export function MainMenu() {
         else setDisplayedData(observableGames)
         setSelectedTab('observable')
     }
-
     function setToFinished() {
         setJoinableStyle('tab-unselected')
         setObservableStyle('tab-unselected')
@@ -127,7 +125,7 @@ export function MainMenu() {
 
     return (
         <>
-            <div className={'menu-welcome'}>Welcome, <span onClick={clearStorage}>{localStorage.getItem('username')}!</span></div>
+            <div className={'menu-welcome'}><span onClick={clearStorage}>Welcome,</span> {localStorage.getItem('username')}!</div>
             <div style={{width: '50%', margin: '0 auto'}}>
                 <div className={'tab-row'}>
                     <div className={'tab-group'}>
