@@ -23,7 +23,7 @@ public class Server {
         Spark.port(port);
 
         // Set up static files
-        Spark.externalStaticFileLocation("web/build");
+        Spark.externalStaticFileLocation("web");
 
         // Set up web socket
         Spark.webSocket("/ws", new WebSocketHandler());
