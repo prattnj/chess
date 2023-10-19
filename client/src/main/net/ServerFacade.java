@@ -91,7 +91,7 @@ public class ServerFacade {
      * @return A basic response indicating success or failure
      */
     public BaseResponse clear() {
-        return execute("/db", null, null, "DELETE", BaseResponse.class);
+        return execute("/db", null, System.getenv("MYSQL_PASSWORD"), "DELETE", BaseResponse.class);
     }
 
     private BaseResponse execute(String endpoint, BaseRequest request, String authToken, String verb, Type successResp) {

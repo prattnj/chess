@@ -29,7 +29,7 @@ public class Server {
         Spark.webSocket("/ws", new WebSocketHandler());
 
         // Set up endpoints
-        Spark.delete("/db", new Handler(new ClearService(), null, false));
+        Spark.delete("/db", new Handler(new ClearService(), null, true));
         Spark.post("/user", new Handler(new RegisterService(), RegisterRequest.class, false));
         Spark.post("/session", new Handler(new LoginService(), LoginRequest.class, false));
         Spark.delete("/session", new Handler(new LogoutService(), null, true));
