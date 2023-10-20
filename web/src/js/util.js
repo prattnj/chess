@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react";
+import {channel} from "../index";
 import '../css/util.css'
 
 export function LoginScreen() {
@@ -61,8 +62,7 @@ export function LoginScreen() {
             setErrorMessage(data.message)
             localStorage.clear()
         } else {
-            console.log(data)
-            localStorage.setItem('token', data.authToken)
+            setToken(data.authToken)
             localStorage.setItem('username', data.username)
             window.location.reload()
         }
@@ -80,7 +80,7 @@ export function LoginScreen() {
                 />
                 <input id={'password-input'}
                        className={'login-input'}
-                       type={'text'}
+                       type={'password'}
                        placeholder={'Password'}
                        onChange={(e) => setPasswordText(e.target.value)}
                 />
@@ -100,7 +100,23 @@ export function LoginScreen() {
     )
 }
 
+export function setToken(token) {
+    channel.postMessage(token)
+    localStorage.setItem('token', token)
+}
+
+export function getToken() {
+    let token = localStorage.getItem('token')
+    if (token === 'undefined' || token === undefined) token = null
+    return token
+}
+
 export function clearStorage() {
     localStorage.clear()
     sessionStorage.clear()
+}
+
+export function printStorage() {
+    console.log(localStorage)
+    console.log(sessionStorage)
 }

@@ -1,4 +1,4 @@
-import {clearStorage, LoginScreen} from "./util";
+import {clearStorage, getToken, LoginScreen} from "./util";
 import '../css/menu.css'
 import {useCallback, useEffect, useState} from "react";
 
@@ -61,21 +61,17 @@ export function MainMenu() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem('token'),
+                'Authorization': getToken(),
             },
         }).then(r => r.json()).then(data => {
             console.log(data)
-            if (data.success) {
-                initializeGames(data.games)
-                // setDisplayedData(joinableGames)
-            } else {
-                setDisplayedData("Unknown error occurred.")
-            }
+            if (data.success) initializeGames(data.games)
+            else setDisplayedData("Unknown error occurred.")
         })
     }, [initializeGames])
 
     useEffect(() => {
-        if (localStorage.getItem('token') == null) return
+        if (getToken() == null) return
         refreshGames()
     }, [refreshGames])
 
@@ -105,7 +101,7 @@ export function MainMenu() {
     }
 
     // if not logged in, return login screen
-    if (localStorage.getItem('token') == null) return <LoginScreen/>
+    if (getToken() == null) return <LoginScreen/>
 
     function GameTile(props) {
 
@@ -163,7 +159,7 @@ function CreateGamePopup(props) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem('token'),
+                'Authorization': getToken(),
             },
             body: JSON.stringify({
                 "gameName": gameName
@@ -190,7 +186,7 @@ function CreateGamePopup(props) {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem('token')
+                'Authorization': getToken(),
             },
             body: JSON.stringify({
                 "playerColor": color,

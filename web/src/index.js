@@ -6,6 +6,9 @@ import {MainMenu} from "./js/menu";
 import {Play} from "./js/play";
 import {Watch} from "./js/watch";
 
+export const channel = new BroadcastChannel('chess-channel')
+channel.onmessage = e => localStorage.setItem('token', e.data)
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <BrowserRouter>
