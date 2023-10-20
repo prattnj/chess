@@ -20,7 +20,7 @@ public class AuthTokenDAOTest {
 
     @BeforeEach
     public void setup() throws DataAccessException {
-        db = new Database();
+        db = Database.getInstance();
         try {
             dao = new MySQLAuthTokenDAO(db.getConnection());
         } catch (DataAccessException e) {

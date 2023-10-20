@@ -20,7 +20,7 @@ public class UserDAOTest {
 
     @BeforeEach
     public void setup() throws DataAccessException {
-        db = new Database();
+        db = Database.getInstance();
         try {
             dao = new MySQLUserDAO(db.getConnection());
         } catch (DataAccessException e) {

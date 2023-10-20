@@ -14,6 +14,14 @@ public class Database {
      */
     private Connection conn;
 
+    private static final Database instance = new Database();
+
+    private Database() {}
+
+    public static Database getInstance() {
+        return instance;
+    }
+
     /**
      * Initiates a connection to the database
      * @return new Connection object

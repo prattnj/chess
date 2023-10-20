@@ -21,7 +21,7 @@ public class GameDAOTest {
 
     @BeforeEach
     public void setup() throws DataAccessException {
-        db = new Database();
+        db = Database.getInstance();
         try {
             dao = new MySQLGameDAO(db.getConnection());
         } catch (DataAccessException e) {
